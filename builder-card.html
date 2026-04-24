@@ -60,6 +60,19 @@
   .topnav .ae .av{width:28px;height:28px;border-radius:50%;background:var(--brand);color:#17301A;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px}
   .topnav .ae .name{font-weight:600}
   .topnav .ae .role{color:var(--ink-3);font-size:12px}
+  .topnav nav a.admin{color:var(--ink-4);border-left:1px solid var(--border);margin-left:6px;padding-left:14px}
+  .topnav nav a.admin:hover{color:var(--ink-2)}
+  .fb-btn{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border:1px solid var(--border);border-radius:999px;background:var(--surface);color:var(--ink-2);font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;margin-right:10px}
+  .fb-btn:hover{border-color:var(--brand);color:var(--brand-dark)}
+  .fb-btn svg{width:14px;height:14px}
+  .overlay{display:none;position:fixed;inset:0;background:rgba(15,23,42,.4);backdrop-filter:blur(2px);z-index:100;align-items:center;justify-content:center}
+  .overlay.open{display:flex}
+  .modal-wrap{background:var(--surface);border-radius:var(--radius);box-shadow:0 20px 50px rgba(15,23,42,.2);padding:24px 26px;max-width:460px;width:calc(100% - 40px)}
+  .modal-wrap h3{margin:0 0 4px;font-size:18px;font-weight:700;letter-spacing:-.01em}
+  .modal-wrap p{margin:0 0 16px;color:var(--ink-3);font-size:13px}
+  .modal-wrap textarea{width:100%;min-height:120px;padding:12px;border:1px solid var(--border-strong);border-radius:8px;font:inherit;font-size:13.5px;resize:vertical;color:var(--ink)}
+  .modal-wrap textarea:focus{outline:none;border-color:var(--brand)}
+  .modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:14px}
   .crumb{color:var(--ink-3);font-size:13px;margin-bottom:12px}
   .crumb a{color:var(--ink-3);text-decoration:none}
   .crumb a:hover{color:var(--brand-dark)}
@@ -259,12 +272,17 @@
   <img src="./logo.png" class="logo" alt="BuilderPath">
   <span class="brand">BuilderPath</span>
   <nav>
-    <a href="./">Opportunities</a>
+    <a href="./">Dashboard</a>
+    <a href="./transactions.html">Transactions</a>
     <a href="./permit-pipeline.html">Permit Pipeline</a>
-    <a href="./builder-card.html" class="active">Builders</a>
-    <a href="#" style="color:var(--ink-4);pointer-events:none">Reports</a>
+    <a href="./builders.html" class="active">Builders</a>
+    <a href="./admin.html" class="admin">Admin</a>
   </nav>
-  <div class="spacer"></div>
+  <div style="flex:1"></div>
+  <button class="fb-btn" onclick="document.getElementById('fb').classList.add('open')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+    Feedback
+  </button>
   <div class="ae">
     <span class="av">HP</span>
     <span><span class="name">Heath Pierce</span><br><span class="role">AE · Seattle Metro</span></span>
@@ -274,9 +292,7 @@
 <div class="page">
 
   <div class="crumb">
-    <a href="./">Opportunities</a>
-    <span class="sep">›</span>
-    <a href="./permit-pipeline.html">Permit Pipeline</a>
+    <a href="./builders.html">Builders</a>
     <span class="sep">›</span>
     <span>Evergreen Homes LLC</span>
   </div>
@@ -324,6 +340,10 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z"/><path d="M4 4l8 8 8-8"/></svg>
         Draft Email
       </button>
+      <a class="btn" href="./drip-campaign.html" style="text-decoration:none;color:var(--ink)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+        Start Drip Campaign
+      </a>
       <button class="btn">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
         Log Job Site Visit
@@ -333,8 +353,8 @@
         Quick Note
       </button>
       <button class="btn" style="margin-left:auto">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>
-        Report Issue
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg>
+        Archive Builder
       </button>
     </div>
 
@@ -523,6 +543,18 @@
     Mockup · static representation only — data, names, and permit numbers are illustrative. Theme accent sampled from <code>logo.png</code>.
   </div>
 
+</div>
+
+<div class="overlay" id="fb" onclick="this.classList.remove('open')">
+  <div class="modal-wrap" onclick="event.stopPropagation()">
+    <h3>Send feedback</h3>
+    <p>Your message is delivered to the BuilderPath admin team's Feedback inbox in the Admin Dashboard.</p>
+    <textarea placeholder="What's working, what's not, what you need."></textarea>
+    <div class="modal-actions">
+      <button class="btn" onclick="document.getElementById('fb').classList.remove('open')">Cancel</button>
+      <button class="btn primary">Send</button>
+    </div>
+  </div>
 </div>
 
 <script>

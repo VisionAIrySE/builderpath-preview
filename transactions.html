@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>BuilderPath — Transactions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root{--brand:#7FCF2E;--brand-dark:#5FA91F;--brand-soft:#EEF9DA;--ink:#0F172A;--ink-2:#334155;--ink-3:#64748B;--ink-4:#94A3B8;--border:#E2E8F0;--border-strong:#CBD5E1;--surface:#FFFFFF;--surface-2:#F8FAFC;--surface-3:#F1F5F9;--danger:#DC2626;--danger-soft:#FEE2E2;--warn:#D97706;--warn-soft:#FEF3C7;--success:#16A34A;--success-soft:#DCFCE7;--info:#0369A1;--info-soft:#E0F2FE;--shadow-sm:0 1px 2px rgba(15,23,42,.04),0 1px 1px rgba(15,23,42,.03);--shadow-md:0 4px 12px rgba(15,23,42,.06),0 2px 4px rgba(15,23,42,.04);--radius:14px;--radius-sm:8px}
+  *{box-sizing:border-box}html,body{margin:0;padding:0}
+  body{font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--surface-2);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+  .topnav{display:flex;align-items:center;gap:14px;padding:14px 28px;background:var(--surface);border-bottom:1px solid var(--border);box-shadow:var(--shadow-sm);position:sticky;top:0;z-index:10}
+  .topnav .logo{height:30px;width:auto}
+  .topnav .brand{font-weight:700;font-size:16px;letter-spacing:-.01em;color:var(--ink)}
+  .topnav nav{display:flex;gap:2px;margin-left:16px}
+  .topnav nav a{padding:8px 12px;border-radius:8px;font-size:13.5px;font-weight:600;color:var(--ink-3);text-decoration:none;transition:all .12s}
+  .topnav nav a:hover{background:var(--surface-2);color:var(--ink)}
+  .topnav nav a.active{color:var(--ink);background:var(--brand-soft)}
+  .topnav nav a.admin{color:var(--ink-4);border-left:1px solid var(--border);margin-left:6px;padding-left:14px}
+  .topnav nav a.admin:hover{color:var(--ink-2)}
+  .topnav nav a.admin.active{color:var(--ink);background:var(--info-soft)}
+  .topnav .spacer{flex:1}
+  .fb-btn{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border:1px solid var(--border);border-radius:999px;background:var(--surface);color:var(--ink-2);font-size:13px;font-weight:600;cursor:pointer;font-family:inherit}
+  .fb-btn:hover{border-color:var(--brand);color:var(--brand-dark)}
+  .fb-btn svg{width:14px;height:14px}
+  .topnav .ae{display:flex;align-items:center;gap:10px;padding:6px 14px 6px 6px;border:1px solid var(--border);border-radius:999px;font-size:13px}
+  .topnav .ae .av{width:28px;height:28px;border-radius:50%;background:var(--brand);color:#17301A;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px}
+  .topnav .ae .name{font-weight:600}
+  .topnav .ae .role{color:var(--ink-3);font-size:12px}
+
+  .page{max-width:1320px;margin:0 auto;padding:24px 28px 48px}
+  .page-head{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:18px}
+  .page-title{font-size:24px;font-weight:700;letter-spacing:-.02em;margin:0}
+  .page-sub{color:var(--ink-3);font-size:14px;margin-top:4px;max-width:680px}
+  .kpi{display:flex;gap:10px}
+  .kpi .tile{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 14px;min-width:130px;box-shadow:var(--shadow-sm)}
+  .kpi .label{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-3);font-weight:600}
+  .kpi .val{font-size:20px;font-weight:700;letter-spacing:-.01em;margin-top:2px}
+  .kpi .val.hot{color:#B91C1C}
+  .kpi .val.warn{color:var(--warn)}
+
+  .filterbar{display:flex;flex-wrap:wrap;gap:8px;padding:10px 14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:14px;box-shadow:var(--shadow-sm)}
+  .chip{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border:1px solid var(--border);border-radius:999px;font-size:13px;color:var(--ink-2);background:var(--surface);cursor:pointer;font-family:inherit}
+  .chip:hover{border-color:var(--ink-4)}
+  .chip.on{background:var(--brand-soft);border-color:#D5ED9F;color:var(--brand-dark);font-weight:600}
+  .chip svg{width:12px;height:12px;color:var(--ink-3)}
+  .search{margin-left:auto;display:flex;align-items:center;gap:8px;padding:6px 12px;border:1px solid var(--border);border-radius:999px;background:var(--surface);min-width:240px}
+  .search input{border:none;outline:none;font:inherit;flex:1;background:transparent;color:var(--ink)}
+  .search svg{width:14px;height:14px;color:var(--ink-3)}
+
+  .tablewrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-md)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px}
+  thead th{text-align:left;font-weight:600;color:var(--ink-3);font-size:11px;text-transform:uppercase;letter-spacing:.06em;padding:12px 14px;border-bottom:1px solid var(--border);background:var(--surface-2);white-space:nowrap}
+  thead th.num{text-align:right}
+  tbody td{padding:14px;border-bottom:1px solid var(--border);color:var(--ink-2);vertical-align:middle}
+  tbody tr:last-child td{border-bottom:none}
+  tbody tr:hover{background:var(--surface-2);cursor:pointer}
+  td.num{text-align:right;font-variant-numeric:tabular-nums}
+  td.builder a{color:var(--ink);font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+  td.builder a:hover{color:var(--brand-dark)}
+  td.property{color:var(--ink);font-weight:500}
+  td.property .sub{display:block;color:var(--ink-3);font-size:12px;font-weight:400;margin-top:2px}
+  td.when{color:var(--ink-3);font-variant-numeric:tabular-nums;font-size:13px}
+
+  .score{display:inline-flex;align-items:center;justify-content:center;width:38px;height:26px;border-radius:6px;font-weight:700;font-size:13px;font-variant-numeric:tabular-nums}
+  .score.hot{background:#FEE7E2;color:#B91C1C}
+  .score.warm{background:var(--warn-soft);color:var(--warn)}
+  .score.cool{background:var(--info-soft);color:var(--info)}
+  .score.cold{background:var(--surface-3);color:var(--ink-3)}
+
+  .badge{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:999px;font-size:11.5px;font-weight:600;white-space:nowrap}
+  .badge.stage-new{background:var(--info-soft);color:var(--info)}
+  .badge.stage-contacted{background:var(--warn-soft);color:var(--warn)}
+  .badge.stage-engaged{background:var(--brand-soft);color:var(--brand-dark)}
+  .badge.stage-meeting{background:#F3E8FF;color:#6B21A8}
+  .badge.stage-dormant{background:var(--surface-3);color:var(--ink-3)}
+  .badge.hot-flag{background:#FEE7E2;color:#B91C1C}
+  .badge.hot-flag .dot{width:5px;height:5px;border-radius:50%;background:#DC2626}
+  .badge.new-bd{background:var(--info-soft);color:var(--info)}
+  .next{font-size:13px;color:var(--ink-2)}
+  .next.overdue{color:var(--danger);font-weight:600}
+  .next .when{color:var(--ink-3);display:block;font-size:11.5px;margin-top:2px}
+  .ae-tag{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;background:var(--surface-3);color:var(--ink-2);font-size:11px;font-weight:700}
+  .cross{font-size:11px;color:var(--ink-3);margin-left:6px}
+  .cross a{color:var(--brand-dark);text-decoration:none;font-weight:600}
+  .cross a:hover{text-decoration:underline}
+
+  /* ROW MENU */
+  .rowmenu{position:relative;display:inline-block}
+  .rowmenu .dots{width:28px;height:28px;border-radius:6px;border:none;background:transparent;color:var(--ink-3);cursor:pointer;font-family:inherit;font-size:16px;line-height:1}
+  .rowmenu .dots:hover{background:var(--surface-3);color:var(--ink)}
+  .rowmenu .pop{display:none;position:absolute;right:0;top:calc(100% + 4px);min-width:200px;background:var(--surface);border:1px solid var(--border);border-radius:10px;box-shadow:0 10px 24px rgba(15,23,42,.12);padding:6px;z-index:20}
+  .rowmenu.open .pop{display:block}
+  .rowmenu .pop button{display:flex;width:100%;align-items:center;gap:8px;padding:8px 10px;background:transparent;border:none;color:var(--ink);font:inherit;font-size:13px;text-align:left;border-radius:6px;cursor:pointer}
+  .rowmenu .pop button:hover{background:var(--surface-2)}
+  .rowmenu .pop button.danger{color:var(--danger)}
+  .rowmenu .pop button.danger:hover{background:var(--danger-soft)}
+  .rowmenu .pop hr{border:none;border-top:1px solid var(--border);margin:4px 2px}
+  .rowmenu .pop svg{width:14px;height:14px}
+
+  .help{display:flex;align-items:center;gap:10px;padding:12px 16px;margin-top:14px;background:var(--brand-soft);border:1px solid #D5ED9F;border-radius:var(--radius-sm);color:#1E3A12;font-size:13px}
+  .help svg{width:16px;height:16px;flex-shrink:0}
+  .help strong{font-weight:600}
+  .help a{color:var(--brand-dark);font-weight:600;text-decoration:none}
+  .help a:hover{text-decoration:underline}
+
+  /* FEEDBACK MODAL */
+  .overlay{display:none;position:fixed;inset:0;background:rgba(15,23,42,.4);backdrop-filter:blur(2px);z-index:100;align-items:center;justify-content:center}
+  .overlay.open{display:flex}
+  .modal{background:var(--surface);border-radius:var(--radius);box-shadow:0 20px 50px rgba(15,23,42,.2);padding:24px 26px;max-width:460px;width:calc(100% - 40px)}
+  .modal h3{margin:0 0 4px;font-size:18px;font-weight:700;letter-spacing:-.01em}
+  .modal p{margin:0 0 16px;color:var(--ink-3);font-size:13px}
+  .modal textarea{width:100%;min-height:120px;padding:12px;border:1px solid var(--border-strong);border-radius:8px;font:inherit;font-size:13.5px;resize:vertical;color:var(--ink)}
+  .modal textarea:focus{outline:none;border-color:var(--brand)}
+  .modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:14px}
+  .btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:8px;border:1px solid var(--border-strong);background:var(--surface);color:var(--ink);font-size:13.5px;font-weight:600;cursor:pointer;font-family:inherit}
+  .btn:hover{background:var(--surface-2)}
+  .btn.primary{background:var(--brand);color:#17301A;border-color:var(--brand-dark)}
+  .btn.primary:hover{background:var(--brand-dark);color:#fff}
+
+  @media (max-width:960px){.page{padding:16px}.kpi{flex-wrap:wrap}.topnav{padding:10px 14px}.topnav nav{overflow-x:auto;white-space:nowrap}}
+</style>
+</head>
+<body>
+
+<div class="topnav">
+  <img src="./logo.png" class="logo" alt="BuilderPath">
+  <span class="brand">BuilderPath</span>
+  <nav>
+    <a href="./">Dashboard</a>
+    <a href="./transactions.html" class="active">Transactions</a>
+    <a href="./permit-pipeline.html">Permit Pipeline</a>
+    <a href="./builders.html">Builders</a>
+    <a href="./admin.html" class="admin">Admin</a>
+  </nav>
+  <div class="spacer"></div>
+  <button class="fb-btn" onclick="document.getElementById('fb').classList.add('open')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+    Feedback
+  </button>
+  <div class="ae"><span class="av">HP</span><span><span class="name">Heath Pierce</span><br><span class="role">AE · Seattle Metro</span></span></div>
+</div>
+
+<div class="page">
+
+  <div class="page-head">
+    <div>
+      <h1 class="page-title">Transactions</h1>
+      <div class="page-sub">Recent lot purchases in your territory — financing often <em>not yet placed</em>. Act on hot leads this week. Builders not already on file are created automatically from the transaction.</div>
+    </div>
+    <div class="kpi">
+      <div class="tile"><div class="label">New This Week</div><div class="val">12</div></div>
+      <div class="tile"><div class="label">Hot Leads</div><div class="val hot">3</div></div>
+      <div class="tile"><div class="label">Need First Outreach</div><div class="val warn">4</div></div>
+      <div class="tile"><div class="label">Overdue</div><div class="val warn">2</div></div>
+    </div>
+  </div>
+
+  <div class="filterbar">
+    <button class="chip on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg> My leads</button>
+    <button class="chip">Stage: All</button>
+    <button class="chip">Score: All</button>
+    <button class="chip">County: All (3)</button>
+    <button class="chip">Recorded: Last 30 days</button>
+    <button class="chip">Active only</button>
+    <div class="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg><input placeholder="Search builder, address, parcel…" /></div>
+  </div>
+
+  <div class="tablewrap">
+    <table>
+      <thead><tr>
+        <th style="width:60px">Score</th>
+        <th>Builder</th>
+        <th>Property</th>
+        <th>County</th>
+        <th class="num">Price</th>
+        <th class="num">Lot Size</th>
+        <th>Recorded</th>
+        <th>Stage</th>
+        <th>Next Action</th>
+        <th style="width:40px">AE</th>
+        <th style="width:40px"></th>
+      </tr></thead>
+      <tbody>
+        <tr>
+          <td><span class="score hot">87</span></td>
+          <td class="builder"><a href="./builder-card.html">Evergreen Homes LLC <span class="badge hot-flag"><span class="dot"></span>HOT</span></a><div class="cross">Also in <a href="./permit-pipeline.html">Permit Pipeline</a></div></td>
+          <td class="property">18234 NE 104th Pl, Bothell<span class="sub">Parcel 2826059123 · R-6</span></td>
+          <td>King</td><td class="num"><strong style="color:var(--ink)">$348,000</strong></td><td class="num">0.22 ac</td><td class="when">2026-02-14</td>
+          <td><span class="badge stage-meeting">Meeting Sched</span></td>
+          <td class="next">Call Sarah<span class="when">Fri Apr 25 · 10 AM</span></td>
+          <td><span class="ae-tag">HP</span></td>
+          <td><div class="rowmenu"><button class="dots" onclick="event.stopPropagation();this.parentElement.classList.toggle('open')">⋯</button><div class="pop"><button><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg>Mark followed-up</button><button><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>Add note</button><hr><button class="danger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg>Archive transaction…</button></div></div></td>
+        </tr>
+        <tr>
+          <td><span class="score warm">74</span></td>
+          <td class="builder"><a href="./builder-card.html">Northline Builders</a></td>
+          <td class="property">6412 S Wapato St, Puyallup<span class="sub">Parcel 0420301144 · R-10</span></td>
+          <td>Pierce</td><td class="num"><strong style="color:var(--ink)">$215,000</strong></td><td class="num">0.18 ac</td><td class="when">2026-04-08</td>
+          <td><span class="badge stage-engaged">Engaged</span></td>
+          <td class="next">Send term sheet<span class="when">By Apr 26</span></td>
+          <td><span class="ae-tag">HP</span></td>
+          <td><div class="rowmenu"><button class="dots" onclick="event.stopPropagation();this.parentElement.classList.toggle('open')">⋯</button><div class="pop"><button>Mark followed-up</button><button>Add note</button><hr><button class="danger">Archive transaction…</button></div></div></td>
+        </tr>
+        <tr>
+          <td><span class="score warm">68</span></td>
+          <td class="builder"><a href="./builder-card.html">Cedar Grove Homes</a></td>
+          <td class="property">3919 71st Ave NE, Marysville<span class="sub">Parcel 00437800001900 · R-9,600</span></td>
+          <td>Snohomish</td><td class="num"><strong style="color:var(--ink)">$198,000</strong></td><td class="num">0.25 ac</td><td class="when">2026-04-11</td>
+          <td><span class="badge stage-contacted">Contacted</span></td>
+          <td class="next">Await email reply<span class="when">Expected Apr 24</span></td>
+          <td><span class="ae-tag">HP</span></td>
+          <td><div class="rowmenu"><button class="dots" onclick="event.stopPropagation();this.parentElement.classList.toggle('open')">⋯</button><div class="pop"><button>Mark followed-up</button><button>Add note</button><hr><button class="danger">Archive transaction…</button></div></div></td>
+        </tr>
+        <tr>
+          <td><span class="score warm">63</span></td>
+          <td class="builder"><a href="./builder-card.html">Rainshadow Custom Co</a> <span class="badge new-bd">🆕 NEW</span></td>
+          <td class="property">2245 244th Ave SE, Sammamish<span class="sub">Parcel 6824000080 · R-8</span></td>
+          <td>King</td><td class="num"><strong style="color:var(--ink)">$425,000</strong></td><td class="num">0.33 ac</td><td class="when">2026-04-04</td>
+          <td><span class="badge stage-new">New</span></td>
+          <td class="next overdue">First outreach<span class="when" style="color:var(--danger)">Overdue by 2 days</span></td>
+          <td><span class="ae-tag">HP</span></td>
+          <td><div class="rowmenu"><button class="dots" onclick="event.stopPropagation();this.parentElement.classList.toggle('open')">⋯</button><div class="pop"><button>Assign to me</button><button>Add note</button><hr><button class="danger">Archive transaction…</button></div></div></td>
+        </tr>
+        <tr>
+          <td><span class="score warm">60</span></td>
+          <td class="builder"><a href="./builder-card.html">Copperbeam Homes LLC</a></td>
+          <td class="property">10324 NE 132nd St, Kirkland<span class="sub">Parcel 3885800650 · R-5</span></td>
+          <td>King</td><td class="num"><strong style="color:var(--ink)">$512,000</strong></td><td class="num">0.19 ac</td><td class="when">2026-04-01</td>
+          <td><span class="badge stage-new">New</span></td>
+          <td class="next">First outreach<span class="when">Due Apr 24</span></td>
+          <td><span class="ae-tag">HP</span></td>
+          <td><div class="rowmenu"><button class="dots" onclick="event.stopPropagation();this.parentElement.classList.toggle('open')">⋯</button><div class="pop"><button>Mark followed-up</button><button>Add note</button><hr><button class="danger">Archive transaction…</button></div></div></td>
+        </tr>
+        <tr>
+          <td><span class="score cool">58</span></td>
+          <td class="builder"><a href="./builder-card.html">Sound Ridge Dev LLC</a> <span class="badge new-bd">🆕 NEW</span></td>
+          <td class="property">5512 Bridgeport Way W, University Place<span class="sub">Parcel 7650300320 · R-7</span></td>
+          <td>Pierce</td><td class="num"><strong style="color:var(--ink)">$309,000</strong></td><td class="num">0.27 ac</td><td class="when">2026-04-03</td>
+          <td><span class="badge stage-new">New</span></td>
+          <td class="next">Qualify (enriched)<span class="when">Due Apr 26</span></td>
+          <td><span class="ae-tag">HP</span></td>
+          <td><div class="rowmenu"><button class="dots" onclick="event.stopPropagation();this.parentElement.classList.toggle('open')">⋯</button><div class="pop"><button>Mark followed-up</button><button>Add note</button><hr><button class="danger">Archive transaction…</button></div></div></td>
+        </tr>
+        <tr>
+          <td><span class="score cool">54</span></td>
+          <td class="builder"><a href="./builder-card.html">Madrona Street Builders</a></td>
+          <td class="property">1817 S 24th St, Renton<span class="sub">Parcel 7227801720 · R-8</span></td>
+          <td>King</td><td class="num"><strong style="color:var(--ink)">$278,000</strong></td><td class="num">0.21 ac</td><td class="when">2026-03-29</td>
+          <td><span class="badge stage-contacted">Contacted</span></td>
+          <td class="next overdue">Follow-up<span class="when" style="color:var(--danger)">Overdue by 5 days</span></td>
+          <td><span class="ae-tag">HP</span></td>
+          <td><div class="rowmenu"><button class="dots" onclick="event.stopPropagation();this.parentElement.classList.toggle('open')">⋯</button><div class="pop"><button>Mark followed-up</button><button>Add note</button><hr><button class="danger">Archive transaction…</button></div></div></td>
+        </tr>
+        <tr>
+          <td><span class="score cool">52</span></td>
+          <td class="builder"><a href="./builder-card.html">Stoneleaf Construction</a></td>
+          <td class="property">15228 35th Dr SE, Mill Creek<span class="sub">Parcel 00510900003700 · R-9,600</span></td>
+          <td>Snohomish</td><td class="num"><strong style="color:var(--ink)">$241,000</strong></td><td class="num">0.16 ac</td><td class="when">2026-03-27</td>
+          <td><span class="badge stage-new">New</span></td>
+          <td class="next">Assign AE<span class="when">Unassigned</span></td>
+          <td><span class="ae-tag" style="background:var(--warn-soft);color:var(--warn)">—</span></td>
+          <td><div class="rowmenu"><button class="dots" onclick="event.stopPropagation();this.parentElement.classList.toggle('open')">⋯</button><div class="pop"><button>Assign to me</button><button>Add note</button><hr><button class="danger">Archive transaction…</button></div></div></td>
+        </tr>
+        <tr>
+          <td><span class="score cool">50</span></td>
+          <td class="builder"><a href="./builder-card.html">Salish Crest Homes</a></td>
+          <td class="property">8907 Peacock Hill Ave NW, Gig Harbor<span class="sub">Parcel 0022252024 · R-10</span></td>
+          <td>Pierce</td><td class="num"><strong style="color:var(--ink)">$389,000</strong></td><td class="num">0.42 ac</td><td class="when">2026-03-26</td>
+          <td><span class="badge stage-contacted">Contacted</span></td>
+          <td class="next">Check in<span class="when">Due Apr 25</span></td>
+          <td><span class="ae-tag">HP</span></td>
+          <td><div class="rowmenu"><button class="dots" onclick="event.stopPropagation();this.parentElement.classList.toggle('open')">⋯</button><div class="pop"><button>Mark followed-up</button><button>Add note</button><hr><button class="danger">Archive transaction…</button></div></div></td>
+        </tr>
+        <tr>
+          <td><span class="score cool">46</span></td>
+          <td class="builder"><a href="./builder-card.html">Tidewater Dwellings</a></td>
+          <td class="property">3521 S Yakima Ave, Tacoma<span class="sub">Parcel 8935000290 · R-6</span></td>
+          <td>Pierce</td><td class="num"><strong style="color:var(--ink)">$152,000</strong></td><td class="num">0.14 ac</td><td class="when">2026-03-24</td>
+          <td><span class="badge stage-new">New</span></td>
+          <td class="next">First outreach<span class="when">Due Apr 25</span></td>
+          <td><span class="ae-tag">HP</span></td>
+          <td><div class="rowmenu"><button class="dots" onclick="event.stopPropagation();this.parentElement.classList.toggle('open')">⋯</button><div class="pop"><button>Mark followed-up</button><button>Add note</button><hr><button class="danger">Archive transaction…</button></div></div></td>
+        </tr>
+        <tr>
+          <td><span class="score cold">42</span></td>
+          <td class="builder"><a href="./builder-card.html">Fern Hollow Custom Homes</a></td>
+          <td class="property">7812 232nd St SE, Bothell<span class="sub">Parcel 00450300005800 · R-7</span></td>
+          <td>Snohomish</td><td class="num"><strong style="color:var(--ink)">$336,000</strong></td><td class="num">0.28 ac</td><td class="when">2026-03-22</td>
+          <td><span class="badge stage-dormant">Dormant</span></td>
+          <td class="next">Re-engage<span class="when">Last touch 35d</span></td>
+          <td><span class="ae-tag">HP</span></td>
+          <td><div class="rowmenu"><button class="dots" onclick="event.stopPropagation();this.parentElement.classList.toggle('open')">⋯</button><div class="pop"><button>Add note</button><hr><button class="danger">Archive transaction…</button></div></div></td>
+        </tr>
+        <tr>
+          <td><span class="score cold">38</span></td>
+          <td class="builder"><a href="./builder-card.html">Ridgeback Builders</a></td>
+          <td class="property">26419 220th Pl SE, Maple Valley<span class="sub">Parcel 3391300800 · R-8</span></td>
+          <td>King</td><td class="num"><strong style="color:var(--ink)">$186,000</strong></td><td class="num">0.20 ac</td><td class="when">2026-03-19</td>
+          <td><span class="badge stage-new">New</span></td>
+          <td class="next">Qualify<span class="when">Unscored contact</span></td>
+          <td><span class="ae-tag">HP</span></td>
+          <td><div class="rowmenu"><button class="dots" onclick="event.stopPropagation();this.parentElement.classList.toggle('open')">⋯</button><div class="pop"><button>Add note</button><hr><button class="danger">Archive transaction…</button></div></div></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="help">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+    <div><strong>Transactions = lot purchases.</strong> Financing is usually <em>not yet placed</em> — highest priority. Permit-only signals live on the <a href="./permit-pipeline.html">Permit Pipeline</a> page; those are typically post-financing, treat as relationship-build + future-business leads. Use the <strong>⋯</strong> menu on any row to archive when you've decided not to pursue — archived items stay searchable but drop from the active queue.</div>
+  </div>
+
+</div>
+
+<!-- FEEDBACK MODAL -->
+<div class="overlay" id="fb" onclick="this.classList.remove('open')">
+  <div class="modal" onclick="event.stopPropagation()">
+    <h3>Send feedback</h3>
+    <p>Your message is delivered to the BuilderPath admin team's Feedback inbox in the Admin Dashboard.</p>
+    <textarea placeholder="What's working, what's not, what you need. Screenshots are appreciated — paste them in a follow-up email."></textarea>
+    <div class="modal-actions">
+      <button class="btn" onclick="document.getElementById('fb').classList.remove('open')">Cancel</button>
+      <button class="btn primary">Send</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('click', () => document.querySelectorAll('.rowmenu.open').forEach(m => m.classList.remove('open')));
+</script>
+
+</body>
+</html>

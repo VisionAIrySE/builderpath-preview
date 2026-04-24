@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>BuilderPath — Welcome, AE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{--brand:#7FCF2E;--brand-dark:#5FA91F;--brand-soft:#EEF9DA;--ink:#0F172A;--ink-2:#334155;--ink-3:#64748B;--ink-4:#94A3B8;--border:#E2E8F0;--border-strong:#CBD5E1;--surface:#FFFFFF;--surface-2:#F8FAFC;--surface-3:#F1F5F9;--success:#16A34A;--success-soft:#DCFCE7;--info:#0369A1;--info-soft:#E0F2FE;--shadow-sm:0 1px 2px rgba(15,23,42,.04);--shadow-md:0 4px 12px rgba(15,23,42,.06);--shadow-lg:0 20px 50px rgba(15,23,42,.08);--radius:16px;--radius-sm:10px}
+  *{box-sizing:border-box}html,body{margin:0;padding:0}
+  body{font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:var(--ink);background:linear-gradient(180deg,var(--surface-2) 0%, #F0F7E5 100%);min-height:100vh;font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+  .shell{max-width:720px;margin:0 auto;padding:36px 24px 60px}
+  .brand-row{display:flex;align-items:center;gap:10px;margin-bottom:28px}
+  .brand-row img{height:32px;width:auto}
+  .brand-row .name{font-weight:700;font-size:17px;letter-spacing:-.01em}
+
+  .hero{margin-bottom:24px}
+  .hero h1{font-size:30px;font-weight:800;letter-spacing:-.02em;margin:0 0 6px}
+  .hero p{color:var(--ink-3);font-size:15px;margin:0;max-width:580px}
+  .hero .inv{font-size:13px;color:var(--ink-2);margin-top:10px;padding:10px 14px;background:var(--brand-soft);border:1px solid #D5ED9F;border-radius:var(--radius-sm);display:inline-flex;align-items:center;gap:8px}
+  .hero .inv svg{width:14px;height:14px;color:var(--brand-dark)}
+
+  /* STEP HEADER */
+  .stepbar{display:flex;justify-content:space-between;align-items:center;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px 20px;margin-bottom:18px;box-shadow:var(--shadow-sm)}
+  .stepbar .stp{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink-3);font-weight:600}
+  .stepbar .stp .num{width:22px;height:22px;border-radius:50%;background:var(--surface-3);color:var(--ink-3);font-size:11px;display:flex;align-items:center;justify-content:center;font-weight:700}
+  .stepbar .stp.done .num{background:var(--success);color:#fff}
+  .stepbar .stp.done{color:var(--ink-2)}
+  .stepbar .stp.active .num{background:var(--brand);color:#17301A;border:2px solid var(--brand-dark)}
+  .stepbar .stp.active{color:var(--ink)}
+  .stepbar .sep{flex:1;height:2px;background:var(--border);margin:0 10px}
+  .stepbar .sep.done{background:var(--success)}
+
+  /* CARD */
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow-md);overflow:hidden;margin-bottom:16px}
+  .card-head{padding:22px 26px;border-bottom:1px solid var(--border)}
+  .card-head h2{margin:0 0 4px;font-size:18px;font-weight:700;letter-spacing:-.01em}
+  .card-head p{color:var(--ink-3);font-size:13px;margin:0}
+  .card-body{padding:24px 26px}
+
+  .field{margin-bottom:18px}
+  .field:last-child{margin-bottom:0}
+  .field label{display:block;font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-2);font-weight:700;margin-bottom:6px}
+  .field .hint{font-size:12px;color:var(--ink-3);margin-top:4px}
+  .field .opt{color:var(--ink-4);font-weight:500;text-transform:none;letter-spacing:0;margin-left:6px}
+  .field input,.field select{width:100%;padding:11px 14px;font:inherit;font-size:14.5px;border:1px solid var(--border-strong);border-radius:10px;color:var(--ink);background:var(--surface)}
+  .field input:focus,.field select:focus{outline:none;border-color:var(--brand);box-shadow:0 0 0 3px var(--brand-soft)}
+  .field input.prefilled{background:var(--surface-2);color:var(--ink-2)}
+
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .check-row{display:flex;align-items:center;gap:10px;margin-top:8px;font-size:13px;color:var(--ink-2)}
+  .check-row input[type="checkbox"]{accent-color:var(--brand);width:16px;height:16px}
+
+  .terr-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  .terr-tile{padding:14px 16px;border:1.5px solid var(--border);border-radius:10px;cursor:pointer;user-select:none;transition:all .15s}
+  .terr-tile:hover{border-color:var(--ink-4)}
+  .terr-tile.on{background:var(--brand-soft);border-color:var(--brand);box-shadow:0 0 0 3px rgba(127,207,46,.15)}
+  .terr-tile .tn{font-weight:700;color:var(--ink);font-size:14px}
+  .terr-tile .tp{color:var(--ink-3);font-size:12px;margin-top:2px}
+  .terr-tile .cnt{color:var(--brand-dark);font-weight:600;font-size:12px;margin-top:4px}
+
+  .oauth-btn{display:flex;align-items:center;gap:12px;padding:14px 18px;border:1.5px solid var(--border-strong);border-radius:12px;background:var(--surface);cursor:pointer;text-align:left;width:100%;font-family:inherit;transition:all .15s;margin-bottom:10px}
+  .oauth-btn:hover{border-color:var(--ink-3);background:var(--surface-2)}
+  .oauth-btn.selected{border-color:var(--brand);background:var(--brand-soft)}
+  .oauth-btn .icon{width:32px;height:32px;border-radius:8px;background:var(--surface-3);display:flex;align-items:center;justify-content:center;font-weight:800;color:var(--ink);font-size:14px}
+  .oauth-btn.ms .icon{background:#0078D4;color:#fff}
+  .oauth-btn.gm .icon{background:#EA4335;color:#fff}
+  .oauth-btn .lbl{flex:1}
+  .oauth-btn .title{font-weight:600;color:var(--ink);font-size:14.5px}
+  .oauth-btn .sub{color:var(--ink-3);font-size:12.5px;margin-top:2px}
+  .oauth-btn .check{width:20px;height:20px;border-radius:50%;border:2px solid var(--border-strong);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .oauth-btn.selected .check{background:var(--brand);border-color:var(--brand-dark)}
+  .oauth-btn.selected .check svg{color:#17301A;width:12px;height:12px}
+
+  /* FOOTER */
+  .foot{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:18px}
+  .btn{display:inline-flex;align-items:center;gap:6px;padding:11px 20px;border-radius:10px;border:1px solid var(--border-strong);background:var(--surface);color:var(--ink);font-size:14px;font-weight:600;cursor:pointer;font-family:inherit}
+  .btn:hover{background:var(--surface-2)}
+  .btn.primary{background:var(--brand);color:#17301A;border-color:var(--brand-dark);padding:11px 26px}
+  .btn.primary:hover{background:var(--brand-dark);color:#fff}
+  .btn svg{width:14px;height:14px}
+
+  .summary{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px 22px;box-shadow:var(--shadow-sm);font-size:13px;color:var(--ink-2)}
+  .summary strong{color:var(--ink);font-weight:600}
+
+  @media (max-width:640px){.grid-2,.terr-grid{grid-template-columns:1fr}.shell{padding:24px 16px}}
+</style>
+</head>
+<body>
+
+<div class="shell">
+
+  <div class="brand-row">
+    <img src="./logo.png" alt="BuilderPath">
+    <div class="name">BuilderPath</div>
+  </div>
+
+  <div class="hero">
+    <h1>Welcome to BuilderPath, Heath.</h1>
+    <p>Three quick steps and you'll be ready for Monday's first queue. Your Veristone admin has already set up your seat — we just need you to confirm your territory, connect your inbox, and tell us where to text you.</p>
+    <div class="inv">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg>
+      Invited by <strong>Veristone Capital · Seattle Branch</strong> · seat activated 2026-04-22
+    </div>
+  </div>
+
+  <div class="stepbar">
+    <div class="stp active"><span class="num">1</span>Your info</div>
+    <div class="sep"></div>
+    <div class="stp"><span class="num">2</span>Territory</div>
+    <div class="sep"></div>
+    <div class="stp"><span class="num">3</span>Connect inbox</div>
+  </div>
+
+  <!-- STEP 1 -->
+  <div class="card">
+    <div class="card-head">
+      <h2>Step 1 — Your info</h2>
+      <p>We use your cell for text notifications on hot leads and overdue follow-ups. You can change any of this later in Settings.</p>
+    </div>
+    <div class="card-body">
+
+      <div class="grid-2">
+        <div class="field">
+          <label>First name</label>
+          <input type="text" value="Heath" />
+        </div>
+        <div class="field">
+          <label>Last name</label>
+          <input type="text" value="Pierce" />
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Cell phone <span style="color:var(--ink-3);font-weight:500;text-transform:none;letter-spacing:0;margin-left:6px">for text notifications — opt in or out per event type</span></label>
+        <input type="tel" placeholder="(555) 123-4567" />
+        <div class="hint">We'll text you for: new hot leads · builder replies to your drip · overdue action reminders. You'll set frequency on the Notifications tab after onboarding.</div>
+      </div>
+
+      <div class="grid-2">
+        <div class="field">
+          <label>NMLS ID <span class="opt">optional</span></label>
+          <input type="text" placeholder="e.g. 123456" />
+          <div class="hint">Appears in your outreach signature if provided.</div>
+        </div>
+        <div class="field">
+          <label>Branch</label>
+          <input type="text" value="Seattle Metro — 600 Stewart St, Seattle WA" class="prefilled" readonly />
+          <div class="hint">Set by your admin during lender onboarding. Contact admin to change.</div>
+        </div>
+      </div>
+
+      <div class="check-row">
+        <input type="checkbox" id="tcpa" checked />
+        <label for="tcpa">I consent to receive text notifications at the number above. Standard message rates apply. Reply STOP to opt out.</label>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="foot">
+    <a href="./" style="color:var(--ink-3);font-size:13px;text-decoration:none">Skip for now</a>
+    <button class="btn primary">Continue → Territory
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+    </button>
+  </div>
+
+  <!-- PREVIEW: STEP 2 + 3 (shown dimmed for walkthrough) -->
+  <div style="margin-top:40px;opacity:.55;pointer-events:none">
+    <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-3);font-weight:700;margin-bottom:10px">Preview — steps 2 &amp; 3</div>
+
+    <div class="card">
+      <div class="card-head">
+        <h2>Step 2 — Territory</h2>
+        <p>Select the counties you work. Your weekly cron pulls transactions and permits from these counties only. Your admin can re-scope this anytime.</p>
+      </div>
+      <div class="card-body">
+        <div class="terr-grid">
+          <div class="terr-tile on"><div class="tn">King</div><div class="tp">Seattle · Bellevue · Kirkland</div><div class="cnt">~180 active builders</div></div>
+          <div class="terr-tile on"><div class="tn">Pierce</div><div class="tp">Tacoma · Puyallup · Gig Harbor</div><div class="cnt">~110 active builders</div></div>
+          <div class="terr-tile on"><div class="tn">Snohomish</div><div class="tp">Everett · Lynnwood · Bothell</div><div class="cnt">~95 active builders</div></div>
+          <div class="terr-tile"><div class="tn">Thurston</div><div class="tp">Olympia · Lacey</div><div class="cnt">~45 active builders</div></div>
+          <div class="terr-tile"><div class="tn">Kitsap</div><div class="tp">Bremerton · Silverdale</div><div class="cnt">~35 active builders</div></div>
+          <div class="terr-tile"><div class="tn">Clark</div><div class="tp">Vancouver · Camas</div><div class="cnt">~60 active builders</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <h2>Step 3 — Connect your inbox</h2>
+        <p>Approved outreach sends from your inbox, so it shows up in your Sent folder and replies thread naturally with the builder.</p>
+      </div>
+      <div class="card-body">
+        <button class="oauth-btn ms selected">
+          <div class="icon">M</div>
+          <div class="lbl">
+            <div class="title">Microsoft 365</div>
+            <div class="sub">Connect heath.pierce@veristonecapital.com</div>
+          </div>
+          <div class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l5 5L20 7"/></svg></div>
+        </button>
+        <button class="oauth-btn gm">
+          <div class="icon">G</div>
+          <div class="lbl">
+            <div class="title">Gmail / Google Workspace</div>
+            <div class="sub">Connect a Google-hosted business inbox</div>
+          </div>
+          <div class="check"></div>
+        </button>
+
+        <div class="field" style="margin-top:22px">
+          <label>Email signature</label>
+          <input type="text" value="Heath Pierce · Veristone Capital · (206) 555-8172" readonly class="prefilled" />
+          <div class="hint">Inherited from your Veristone profile. You can override in Settings.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="summary">
+      <strong>Almost there.</strong> After you complete step 3, we'll run your first data pull for King, Pierce, Snohomish. Your first queue arrives by email <strong>Monday at 6 AM PT</strong> — until then, feel free to poke around the sample data. Welcome aboard. 🛠️
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

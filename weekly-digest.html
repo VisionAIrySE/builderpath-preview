@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>BuilderPath — Weekly Digest Email Preview</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  body{margin:0;padding:0;background:#F1F5F9;font-family:'Inter',Arial,sans-serif;color:#0F172A;-webkit-font-smoothing:antialiased}
+  .frame{max-width:900px;margin:24px auto;padding:0 20px}
+  .mail-wrap{max-width:640px;margin:0 auto;padding:16px 0}
+  .mail-meta{background:#fff;border:1px solid #E2E8F0;border-radius:10px 10px 0 0;padding:16px 22px;font-size:13px;color:#334155;border-bottom:none}
+  .mail-meta .from{font-weight:600;color:#0F172A}
+  .mail-meta .sub{margin-top:4px;font-weight:600;font-size:15px}
+  .mail-meta .pre{color:#64748B;font-size:13px;margin-top:2px}
+
+  .mail{background:#FFFFFF;border:1px solid #E2E8F0;border-radius:0 0 10px 10px;border-top:none;overflow:hidden}
+
+  /* Header */
+  .hdr{background:linear-gradient(135deg,#7FCF2E 0%, #5FA91F 100%);padding:28px 32px;color:#0F1F09}
+  .hdr .brand{display:flex;align-items:center;gap:10px;margin-bottom:18px}
+  .hdr .brand img{height:28px}
+  .hdr .brand .name{font-weight:700;font-size:15px;letter-spacing:-.01em}
+  .hdr h1{margin:0;font-size:26px;font-weight:800;letter-spacing:-.02em;color:#0F1F09}
+  .hdr .intro{margin-top:6px;font-size:14.5px;color:#1E3A12;max-width:520px;line-height:1.6}
+
+  /* Headline stats */
+  .stats{display:table;width:100%;border-collapse:collapse;background:#FFFFFF}
+  .stats .cell{display:table-cell;padding:20px 16px;text-align:center;border-right:1px solid #E2E8F0;width:25%}
+  .stats .cell:last-child{border-right:none}
+  .stats .v{font-size:28px;font-weight:800;letter-spacing:-.01em;color:#0F172A}
+  .stats .v.hot{color:#B91C1C}
+  .stats .v.warn{color:#D97706}
+  .stats .l{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:#64748B;font-weight:600;margin-top:4px}
+
+  /* Sections */
+  .section{padding:22px 28px;border-top:1px solid #E2E8F0}
+  .section h2{margin:0 0 6px;font-size:16px;font-weight:700;letter-spacing:-.01em}
+  .section .lead{color:#64748B;font-size:13px;margin:0 0 14px}
+
+  /* Lead rows */
+  .lead-row{padding:14px 16px;background:#F8FAFC;border:1px solid #E2E8F0;border-radius:10px;margin-bottom:10px;display:flex;align-items:center;gap:14px}
+  .lead-row:last-child{margin-bottom:0}
+  .lead-row.hot{background:#FFFBFA;border-color:#FEE7E2}
+  .lead-row .rank{width:28px;height:28px;border-radius:50%;background:#E2E8F0;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;color:#334155;flex-shrink:0}
+  .lead-row.hot .rank{background:#FEE7E2;color:#B91C1C}
+  .lead-row .body{flex:1}
+  .lead-row .name{font-weight:700;color:#0F172A;font-size:14.5px}
+  .lead-row .why{font-size:12.5px;color:#475569;margin-top:2px;line-height:1.5}
+  .lead-row .kind{display:inline-block;font-size:10px;font-weight:700;padding:2px 7px;border-radius:4px;letter-spacing:.04em;margin-right:6px;vertical-align:1px}
+  .lead-row .kind.permit{background:#EEF9DA;color:#5FA91F}
+  .lead-row .kind.lot{background:#E0F2FE;color:#0369A1}
+  .lead-row .kind.overdue{background:#FEE2E2;color:#DC2626}
+  .lead-row .cta{background:#7FCF2E;color:#17301A;padding:8px 14px;border-radius:8px;text-decoration:none;font-weight:700;font-size:12.5px;border:1px solid #5FA91F;white-space:nowrap;flex-shrink:0}
+
+  /* Split row (new builders/overdue) */
+  .split{display:table;width:100%;border-collapse:collapse;padding:0 28px}
+  .split .half{display:table-cell;width:50%;padding:18px 16px;vertical-align:top}
+  .split .half:first-child{padding-left:0;border-right:1px solid #E2E8F0;padding-right:22px}
+  .split .half:last-child{padding-right:0;padding-left:22px}
+  .split h3{margin:0 0 10px;font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:#64748B;font-weight:700}
+  .split ul{list-style:none;padding:0;margin:0}
+  .split li{font-size:13px;color:#334155;padding:6px 0}
+  .split li strong{color:#0F172A;font-weight:600}
+
+  /* CTA */
+  .cta-block{padding:24px 28px;text-align:center;background:#F8FAFC;border-top:1px solid #E2E8F0}
+  .cta-block .go{font-size:28px;font-weight:800;letter-spacing:-.02em;color:#5FA91F;margin-bottom:10px}
+  .cta-block .go span{color:#0F172A}
+  .cta-block a{display:inline-block;background:#7FCF2E;color:#17301A;padding:13px 28px;border-radius:10px;text-decoration:none;font-weight:700;font-size:15px;border:1px solid #5FA91F;margin-top:6px}
+
+  .foot{padding:18px 28px;text-align:center;font-size:11.5px;color:#94A3B8;border-top:1px solid #E2E8F0}
+  .foot a{color:#64748B;text-decoration:underline}
+  .foot .brand-line{margin-bottom:6px;color:#64748B;font-weight:600}
+
+  .preview-tag{max-width:640px;margin:0 auto 12px;padding:6px 12px;background:#E2E8F0;border-radius:6px;font-size:11px;color:#64748B;text-transform:uppercase;letter-spacing:.08em;font-weight:600;text-align:center}
+  .preview-links{max-width:640px;margin:14px auto 0;font-size:12px;color:#64748B;text-align:center}
+  .preview-links a{color:#5FA91F;text-decoration:none;margin:0 6px;font-weight:600}
+</style>
+</head>
+<body>
+
+<div class="frame">
+  <div class="mail-wrap">
+    <div class="preview-tag">Email Preview — sent 6:02 AM Monday to Heath Pierce</div>
+
+    <div class="mail-meta">
+      <div class="from">BuilderPath &lt;queue@builder-path.com&gt;</div>
+      <div class="sub">☀ Monday: 3 hot leads · 4 new builders · 2 overdue</div>
+      <div class="pre">Good morning Heath — Evergreen pulled another permit overnight. Here's your week.</div>
+    </div>
+
+    <div class="mail">
+
+      <div class="hdr">
+        <div class="brand">
+          <img src="./logo.png" alt="BuilderPath" />
+          <div class="name">BuilderPath</div>
+        </div>
+        <h1>Good morning, Heath.</h1>
+        <div class="intro">Your weekly cron ran at 6:00 AM for <strong>King, Pierce, and Snohomish</strong>. Here's what changed, who needs you, and what we'd do first.</div>
+      </div>
+
+      <!-- STATS -->
+      <div class="stats">
+        <div class="cell"><div class="v hot">3</div><div class="l">Hot Leads</div></div>
+        <div class="cell"><div class="v">12</div><div class="l">New Transactions</div></div>
+        <div class="cell"><div class="v">15</div><div class="l">New Permits</div></div>
+        <div class="cell"><div class="v warn">2</div><div class="l">Overdue</div></div>
+      </div>
+
+      <!-- TOP 3 -->
+      <div class="section">
+        <h2>Top picks for this week</h2>
+        <p class="lead">We recommend starting with these three — score, freshness, and signal alignment.</p>
+
+        <div class="lead-row hot">
+          <div class="rank">1</div>
+          <div class="body">
+            <div class="name">Evergreen Homes LLC · score 87 🔥</div>
+            <div class="why"><span class="kind permit">PERMIT</span>Pulled a 3rd New-SFR permit overnight in Bothell ($872K). Meeting already scheduled Fri 10 AM — come prepared with draw schedule.</div>
+          </div>
+          <a href="./builder-card.html" class="cta">Open card →</a>
+        </div>
+
+        <div class="lead-row">
+          <div class="rank">2</div>
+          <div class="body">
+            <div class="name">Northline Builders · score 74</div>
+            <div class="why"><span class="kind lot">LOT</span>Engaged stage. Term sheet promised by Apr 26. $215K lot in Puyallup; they're waiting on you.</div>
+          </div>
+          <a href="./builder-card.html" class="cta">Draft term sheet</a>
+        </div>
+
+        <div class="lead-row">
+          <div class="rank">3</div>
+          <div class="body">
+            <div class="name">Rainshadow Custom Co · score 63</div>
+            <div class="why"><span class="kind overdue">OVERDUE 2d</span>First outreach never sent. $425K lot + 2 new permits — they're active, we're not.</div>
+          </div>
+          <a href="./builder-card.html" class="cta">Start drip</a>
+        </div>
+      </div>
+
+      <!-- SPLIT: new builders + overdue -->
+      <div class="section" style="padding:0">
+        <div class="split">
+          <div class="half">
+            <h3>🆕 New builders this week</h3>
+            <ul>
+              <li><strong>Sound Ridge Dev LLC</strong> — enriched, ready to qualify</li>
+              <li><strong>Whitecrown Construction</strong> — low-confidence, needs review</li>
+              <li><strong>Moss &amp; Pine Building Co</strong> — still enriching</li>
+              <li><strong>North Creek Residential</strong> — enrichment failed, manual</li>
+            </ul>
+          </div>
+          <div class="half">
+            <h3>⏰ Overdue action</h3>
+            <ul>
+              <li><strong>Rainshadow Custom Co</strong> — 2d · first outreach</li>
+              <li><strong>Madrona Street Builders</strong> — 5d · follow-up call</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- CTA -->
+      <div class="cta-block">
+        <div class="go">Go get 'em. <span>🚀</span></div>
+        <a href="./">Open your dashboard</a>
+      </div>
+
+      <!-- FOOT -->
+      <div class="foot">
+        <div class="brand-line">BuilderPath · Veristone Capital · Seattle Branch</div>
+        You're receiving this because you're an active AE on BuilderPath. Adjust your digest cadence or opt out of text alerts in <a href="#">Notifications</a>. Feedback? <a href="#">Hit reply</a> — it lands in the Admin team's Feedback inbox.
+      </div>
+
+    </div>
+
+    <div class="preview-links">
+      <a href="./">← Dashboard</a> ·
+      <a href="./transactions.html">Transactions</a> ·
+      <a href="./permit-pipeline.html">Permit Pipeline</a> ·
+      <a href="./builders.html">Builders</a>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>

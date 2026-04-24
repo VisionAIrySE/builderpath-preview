@@ -26,15 +26,42 @@
   body{font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
     color:var(--ink);background:var(--surface-2);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
 
-  .topnav{display:flex;align-items:center;gap:18px;padding:14px 28px;background:var(--surface);
+  .topnav{display:flex;align-items:center;gap:14px;padding:14px 28px;background:var(--surface);
     border-bottom:1px solid var(--border);box-shadow:var(--shadow-sm);position:sticky;top:0;z-index:10}
   .topnav .logo{height:30px;width:auto}
   .topnav .brand{font-weight:700;font-size:16px;letter-spacing:-.01em;color:var(--ink)}
-  .topnav nav{display:flex;gap:4px;margin-left:20px}
-  .topnav nav a{padding:8px 14px;border-radius:8px;font-size:14px;font-weight:600;color:var(--ink-3);text-decoration:none;transition:all .12s}
+  .topnav nav{display:flex;gap:2px;margin-left:16px}
+  .topnav nav a{padding:8px 12px;border-radius:8px;font-size:13.5px;font-weight:600;color:var(--ink-3);text-decoration:none;transition:all .12s}
   .topnav nav a:hover{background:var(--surface-2);color:var(--ink)}
   .topnav nav a.active{color:var(--ink);background:var(--brand-soft)}
+  .topnav nav a.admin{color:var(--ink-4);border-left:1px solid var(--border);margin-left:6px;padding-left:14px}
+  .topnav nav a.admin:hover{color:var(--ink-2)}
   .topnav .spacer{flex:1}
+  .fb-btn{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border:1px solid var(--border);border-radius:999px;background:var(--surface);color:var(--ink-2);font-size:13px;font-weight:600;cursor:pointer;font-family:inherit}
+  .fb-btn:hover{border-color:var(--brand);color:var(--brand-dark)}
+  .fb-btn svg{width:14px;height:14px}
+  .rowmenu{position:relative;display:inline-block}
+  .rowmenu .dots{width:28px;height:28px;border-radius:6px;border:none;background:transparent;color:var(--ink-3);cursor:pointer;font-family:inherit;font-size:16px;line-height:1}
+  .rowmenu .dots:hover{background:var(--surface-3);color:var(--ink)}
+  .rowmenu .pop{display:none;position:absolute;right:0;top:calc(100% + 4px);min-width:200px;background:var(--surface);border:1px solid var(--border);border-radius:10px;box-shadow:0 10px 24px rgba(15,23,42,.12);padding:6px;z-index:20}
+  .rowmenu.open .pop{display:block}
+  .rowmenu .pop button{display:flex;width:100%;align-items:center;gap:8px;padding:8px 10px;background:transparent;border:none;color:var(--ink);font:inherit;font-size:13px;text-align:left;border-radius:6px;cursor:pointer}
+  .rowmenu .pop button:hover{background:var(--surface-2)}
+  .rowmenu .pop button.danger{color:var(--danger)}
+  .rowmenu .pop button.danger:hover{background:var(--danger-soft)}
+  .rowmenu .pop hr{border:none;border-top:1px solid var(--border);margin:4px 2px}
+  .overlay{display:none;position:fixed;inset:0;background:rgba(15,23,42,.4);backdrop-filter:blur(2px);z-index:100;align-items:center;justify-content:center}
+  .overlay.open{display:flex}
+  .modal{background:var(--surface);border-radius:var(--radius);box-shadow:0 20px 50px rgba(15,23,42,.2);padding:24px 26px;max-width:460px;width:calc(100% - 40px)}
+  .modal h3{margin:0 0 4px;font-size:18px;font-weight:700;letter-spacing:-.01em}
+  .modal p{margin:0 0 16px;color:var(--ink-3);font-size:13px}
+  .modal textarea{width:100%;min-height:120px;padding:12px;border:1px solid var(--border-strong);border-radius:8px;font:inherit;font-size:13.5px;resize:vertical;color:var(--ink)}
+  .modal textarea:focus{outline:none;border-color:var(--brand)}
+  .modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:14px}
+  .btn-m{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:8px;border:1px solid var(--border-strong);background:var(--surface);color:var(--ink);font-size:13.5px;font-weight:600;cursor:pointer;font-family:inherit}
+  .btn-m:hover{background:var(--surface-2)}
+  .btn-m.primary{background:var(--brand);color:#17301A;border-color:var(--brand-dark)}
+  .btn-m.primary:hover{background:var(--brand-dark);color:#fff}
   .topnav .ae{display:flex;align-items:center;gap:10px;padding:6px 14px 6px 6px;border:1px solid var(--border);border-radius:999px;font-size:13px}
   .topnav .ae .av{width:28px;height:28px;border-radius:50%;background:var(--brand);color:#17301A;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px}
   .topnav .ae .name{font-weight:600}
@@ -150,12 +177,17 @@
   <img src="./logo.png" class="logo" alt="BuilderPath">
   <span class="brand">BuilderPath</span>
   <nav>
-    <a href="./">Opportunities</a>
+    <a href="./">Dashboard</a>
+    <a href="./transactions.html">Transactions</a>
     <a href="./permit-pipeline.html" class="active">Permit Pipeline</a>
-    <a href="./builder-card.html">Builders</a>
-    <a href="#" style="color:var(--ink-4);pointer-events:none">Reports</a>
+    <a href="./builders.html">Builders</a>
+    <a href="./admin.html" class="admin">Admin</a>
   </nav>
   <div class="spacer"></div>
+  <button class="fb-btn" onclick="document.getElementById('fb').classList.add('open')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+    Feedback
+  </button>
   <div class="ae">
     <span class="av">HP</span>
     <span><span class="name">Heath Pierce</span><br><span class="role">AE · Seattle Metro</span></span>
@@ -431,6 +463,22 @@
   </div>
 
 </div>
+
+<div class="overlay" id="fb" onclick="this.classList.remove('open')">
+  <div class="modal" onclick="event.stopPropagation()">
+    <h3>Send feedback</h3>
+    <p>Your message is delivered to the BuilderPath admin team's Feedback inbox in the Admin Dashboard.</p>
+    <textarea placeholder="What's working, what's not, what you need."></textarea>
+    <div class="modal-actions">
+      <button class="btn-m" onclick="document.getElementById('fb').classList.remove('open')">Cancel</button>
+      <button class="btn-m primary">Send</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('click', () => document.querySelectorAll('.rowmenu.open').forEach(m => m.classList.remove('open')));
+</script>
 
 </body>
 </html>

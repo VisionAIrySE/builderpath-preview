@@ -1,0 +1,371 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>BuilderPath — Admin Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root{--brand:#7FCF2E;--brand-dark:#5FA91F;--brand-soft:#EEF9DA;--ink:#0F172A;--ink-2:#334155;--ink-3:#64748B;--ink-4:#94A3B8;--border:#E2E8F0;--border-strong:#CBD5E1;--surface:#FFFFFF;--surface-2:#F8FAFC;--surface-3:#F1F5F9;--danger:#DC2626;--danger-soft:#FEE2E2;--warn:#D97706;--warn-soft:#FEF3C7;--success:#16A34A;--success-soft:#DCFCE7;--info:#0369A1;--info-soft:#E0F2FE;--admin:#4338CA;--admin-soft:#E0E7FF;--shadow-sm:0 1px 2px rgba(15,23,42,.04);--shadow-md:0 4px 12px rgba(15,23,42,.06);--radius:14px;--radius-sm:8px}
+  *{box-sizing:border-box}html,body{margin:0;padding:0}
+  body{font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:var(--ink);background:var(--surface-2);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+
+  .topnav{display:flex;align-items:center;gap:14px;padding:14px 28px;background:var(--surface);border-bottom:1px solid var(--border);box-shadow:var(--shadow-sm);position:sticky;top:0;z-index:10}
+  .topnav .logo{height:30px;width:auto}
+  .topnav .brand{font-weight:700;font-size:16px;letter-spacing:-.01em;color:var(--ink)}
+  .topnav nav{display:flex;gap:2px;margin-left:16px}
+  .topnav nav a{padding:8px 12px;border-radius:8px;font-size:13.5px;font-weight:600;color:var(--ink-3);text-decoration:none}
+  .topnav nav a:hover{background:var(--surface-2);color:var(--ink)}
+  .topnav nav a.active{color:var(--ink);background:var(--brand-soft)}
+  .topnav nav a.admin{color:var(--ink-4);border-left:1px solid var(--border);margin-left:6px;padding-left:14px}
+  .topnav nav a.admin.active{color:var(--ink);background:var(--admin-soft)}
+  .topnav .spacer{flex:1}
+  .topnav .ae{display:flex;align-items:center;gap:10px;padding:6px 14px 6px 6px;border:1px solid var(--border);border-radius:999px;font-size:13px}
+  .topnav .ae .av{width:28px;height:28px;border-radius:50%;background:var(--admin);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px}
+  .topnav .ae .name{font-weight:600}
+  .topnav .ae .role{color:var(--admin);font-size:12px;font-weight:600}
+
+  .adminbar{background:var(--admin);color:#fff;padding:8px 28px;font-size:12.5px;display:flex;align-items:center;gap:8px}
+  .adminbar svg{width:13px;height:13px}
+  .adminbar strong{font-weight:600}
+
+  .page{max-width:1400px;margin:0 auto;padding:24px 28px 48px}
+  .page-head{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:18px}
+  .page-title{font-size:24px;font-weight:700;letter-spacing:-.02em;margin:0}
+  .page-sub{color:var(--ink-3);font-size:14px;margin-top:4px}
+
+  /* TABS */
+  .tabs{display:flex;gap:4px;padding:0 8px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius) var(--radius) 0 0;border-bottom:none}
+  .tab{padding:14px 18px;border:none;background:transparent;cursor:pointer;font-family:inherit;font-size:13.5px;font-weight:600;color:var(--ink-3);border-bottom:2px solid transparent;margin-bottom:-1px}
+  .tab:hover{color:var(--ink)}
+  .tab.active{color:var(--ink);border-bottom-color:var(--admin)}
+  .tab .count{display:inline-block;margin-left:6px;font-size:11px;padding:1px 7px;background:var(--surface-3);color:var(--ink-2);border-radius:999px;font-weight:600}
+  .tab.active .count{background:var(--admin-soft);color:var(--admin)}
+
+  .panel{background:var(--surface);border:1px solid var(--border);border-radius:0 0 var(--radius) var(--radius);box-shadow:var(--shadow-md);padding:22px 26px;display:none}
+  .panel.active{display:block}
+
+  /* ANALYTICS */
+  .kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px}
+  .kpi{padding:16px 18px;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-sm)}
+  .kpi .lbl{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-3);font-weight:600}
+  .kpi .v{font-size:26px;font-weight:700;letter-spacing:-.02em;margin-top:4px}
+  .kpi .d{font-size:12.5px;margin-top:2px;color:var(--ink-3)}
+  .kpi .d.up{color:var(--success)}
+  .kpi .d.down{color:var(--danger)}
+  .kpi.mrr .v{color:var(--admin)}
+
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+  .blk h3{margin:0 0 10px;font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-3);font-weight:700}
+  .bar-row{display:grid;grid-template-columns:140px 1fr 60px;gap:10px;align-items:center;font-size:13px;padding:6px 0}
+  .bar-row .lbl{color:var(--ink-2)}
+  .bar-row .track{height:10px;background:var(--surface-3);border-radius:999px;overflow:hidden}
+  .bar-row .fill{height:100%;background:var(--brand);border-radius:999px}
+  .bar-row .fill.info{background:var(--info)}
+  .bar-row .fill.admin{background:var(--admin)}
+  .bar-row .fill.warn{background:var(--warn)}
+  .bar-row .v{text-align:right;font-variant-numeric:tabular-nums;font-weight:600;color:var(--ink)}
+
+  /* TABLES */
+  table{width:100%;border-collapse:collapse;font-size:13.5px}
+  thead th{text-align:left;font-weight:600;color:var(--ink-3);font-size:11px;text-transform:uppercase;letter-spacing:.06em;padding:12px 12px;border-bottom:1px solid var(--border);background:var(--surface-2);white-space:nowrap}
+  thead th.num{text-align:right}
+  tbody td{padding:14px 12px;border-bottom:1px solid var(--border);color:var(--ink-2);vertical-align:middle}
+  tbody tr:last-child td{border-bottom:none}
+  tbody tr:hover{background:var(--surface-2)}
+  td.strong{color:var(--ink);font-weight:600}
+  td.num{text-align:right;font-variant-numeric:tabular-nums}
+
+  .badge{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:999px;font-size:11.5px;font-weight:600;white-space:nowrap}
+  .badge.active{background:var(--success-soft);color:var(--success)}
+  .badge.trial{background:var(--info-soft);color:var(--info)}
+  .badge.past{background:var(--danger-soft);color:var(--danger)}
+  .badge.invited{background:var(--warn-soft);color:var(--warn)}
+  .badge.suspended{background:var(--surface-3);color:var(--ink-3)}
+  .badge.ae{background:var(--brand-soft);color:var(--brand-dark)}
+  .badge.admin{background:var(--admin-soft);color:var(--admin)}
+
+  .ae-tag{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;background:var(--surface-3);color:var(--ink-2);font-size:11px;font-weight:700;margin-right:4px}
+  .team-row{display:flex;gap:2px;align-items:center}
+
+  .primary-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:8px;background:var(--admin);color:#fff;border:1px solid #3730A3;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;text-decoration:none}
+  .primary-btn:hover{background:#3730A3}
+  .primary-btn svg{width:13px;height:13px}
+  .sec-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:8px;background:var(--surface);color:var(--ink);border:1px solid var(--border-strong);font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;text-decoration:none}
+  .sec-btn:hover{background:var(--surface-2)}
+
+  .panel-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:12px}
+  .panel-head h2{margin:0;font-size:17px;font-weight:700;letter-spacing:-.01em}
+  .panel-sub{color:var(--ink-3);font-size:13px;margin-top:2px}
+
+  /* FEEDBACK INBOX */
+  .fb-list{display:flex;flex-direction:column;gap:0}
+  .fb-item{display:grid;grid-template-columns:44px 1fr auto;gap:14px;padding:16px 18px;border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:10px;background:var(--surface)}
+  .fb-item.unread{background:#FEFCE8;border-color:#FDE68A}
+  .fb-item .av{width:36px;height:36px;border-radius:50%;background:var(--brand);color:#17301A;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px}
+  .fb-item .av.admin{background:var(--admin);color:#fff}
+  .fb-item .who{font-weight:700;color:var(--ink);font-size:14px}
+  .fb-item .meta{color:var(--ink-3);font-size:12px;margin-top:2px}
+  .fb-item .msg{color:var(--ink-2);font-size:13.5px;margin-top:8px;line-height:1.55}
+  .fb-item .tag{display:inline-block;font-size:10.5px;font-weight:700;padding:2px 7px;border-radius:4px;letter-spacing:.04em;margin-left:8px}
+  .fb-item .tag.bug{background:var(--danger-soft);color:var(--danger)}
+  .fb-item .tag.feature{background:var(--info-soft);color:var(--info)}
+  .fb-item .tag.praise{background:var(--success-soft);color:var(--success)}
+  .fb-item .stamp{color:var(--ink-3);font-size:12px;white-space:nowrap}
+</style>
+</head>
+<body>
+
+<div class="topnav">
+  <img src="./logo.png" class="logo" alt="BuilderPath">
+  <span class="brand">BuilderPath</span>
+  <nav>
+    <a href="./">Dashboard</a>
+    <a href="./transactions.html">Transactions</a>
+    <a href="./permit-pipeline.html">Permit Pipeline</a>
+    <a href="./builders.html">Builders</a>
+    <a href="./admin.html" class="admin active">Admin</a>
+  </nav>
+  <div class="spacer"></div>
+  <div class="ae"><span class="av">RW</span><span><span class="name">Russ Wright</span><br><span class="role">Super-Admin</span></span></div>
+</div>
+
+<div class="adminbar">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+  <span><strong>Admin mode</strong> — you're viewing as BuilderPath Super-Admin. AE users don't see this section.</span>
+</div>
+
+<div class="page">
+
+  <div class="page-head">
+    <div>
+      <h1 class="page-title">Admin Dashboard</h1>
+      <div class="page-sub">Platform analytics · Lender management · User seats · Inbound feedback</div>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" data-t="analytics">Analytics</button>
+    <button class="tab" data-t="lenders">Lenders <span class="count">1</span></button>
+    <button class="tab" data-t="users">Users <span class="count">2</span></button>
+    <button class="tab" data-t="feedback">Feedback <span class="count">3</span></button>
+  </div>
+
+  <!-- ANALYTICS -->
+  <div class="panel active" data-p="analytics">
+    <div class="panel-head">
+      <div>
+        <h2>Platform analytics</h2>
+        <div class="panel-sub">Aggregate across all lenders &amp; AEs. Switch to a specific lender in the Lenders tab to see their slice.</div>
+      </div>
+      <button class="sec-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>Export CSV</button>
+    </div>
+
+    <div class="kpi-grid">
+      <div class="kpi mrr"><div class="lbl">MRR</div><div class="v">$2,388</div><div class="d up">12 seats × $199 · Veristone</div></div>
+      <div class="kpi"><div class="lbl">Active Lenders</div><div class="v">1</div><div class="d">1 paying · 0 trial</div></div>
+      <div class="kpi"><div class="lbl">Active AEs</div><div class="v">2</div><div class="d">Heath Pierce · 1 invited</div></div>
+      <div class="kpi"><div class="lbl">Builders in DB</div><div class="v">247</div><div class="d up">+59 this week</div></div>
+    </div>
+
+    <div class="grid-2">
+
+      <div class="blk">
+        <h3>Weekly volume</h3>
+        <div class="bar-row"><span class="lbl">Transactions ingested</span><div class="track"><div class="fill info" style="width:64%"></div></div><span class="v">12</span></div>
+        <div class="bar-row"><span class="lbl">Permits ingested</span><div class="track"><div class="fill" style="width:82%"></div></div><span class="v">15</span></div>
+        <div class="bar-row"><span class="lbl">New builders</span><div class="track"><div class="fill admin" style="width:22%"></div></div><span class="v">4</span></div>
+        <div class="bar-row"><span class="lbl">Drip emails sent</span><div class="track"><div class="fill" style="width:74%"></div></div><span class="v">21</span></div>
+        <div class="bar-row"><span class="lbl">Replies received</span><div class="track"><div class="fill warn" style="width:28%"></div></div><span class="v">7</span></div>
+      </div>
+
+      <div class="blk">
+        <h3>Data source health (last 24h)</h3>
+        <div class="bar-row"><span class="lbl">ATTOM permits</span><div class="track"><div class="fill" style="width:100%"></div></div><span class="v">✓ 100%</span></div>
+        <div class="bar-row"><span class="lbl">ATTOM sales</span><div class="track"><div class="fill" style="width:100%"></div></div><span class="v">✓ 100%</span></div>
+        <div class="bar-row"><span class="lbl">WA SOS</span><div class="track"><div class="fill" style="width:98%"></div></div><span class="v">98%</span></div>
+        <div class="bar-row"><span class="lbl">WA L&amp;I</span><div class="track"><div class="fill warn" style="width:84%"></div></div><span class="v">84%</span></div>
+        <div class="bar-row"><span class="lbl">Google Places</span><div class="track"><div class="fill" style="width:100%"></div></div><span class="v">✓ 100%</span></div>
+        <div class="bar-row"><span class="lbl">Tavily</span><div class="track"><div class="fill" style="width:100%"></div></div><span class="v">✓ 100%</span></div>
+      </div>
+
+    </div>
+
+    <div class="blk" style="margin-top:24px">
+      <h3>Per-AE performance (last 30 days)</h3>
+      <table>
+        <thead><tr><th>AE</th><th>Lender</th><th class="num">Outreach sent</th><th class="num">Reply rate</th><th class="num">Meetings set</th><th class="num">Loans closed</th><th class="num">Volume</th></tr></thead>
+        <tbody>
+          <tr><td class="strong">Heath Pierce</td><td>Veristone Capital</td><td class="num">74</td><td class="num">34%</td><td class="num">11</td><td class="num">2</td><td class="num strong">$1.14M</td></tr>
+          <tr><td class="strong">Erin Belmore</td><td>Veristone Capital <span class="badge invited" style="margin-left:6px">Invited</span></td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- LENDERS -->
+  <div class="panel" data-p="lenders">
+    <div class="panel-head">
+      <div>
+        <h2>Lenders</h2>
+        <div class="panel-sub">Paying + trial lender organizations. Each lender has a billing admin and N seats.</div>
+      </div>
+      <button class="primary-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14"/><path d="M5 12h14"/></svg>Invite new lender</button>
+    </div>
+
+    <table>
+      <thead><tr>
+        <th>Lender</th>
+        <th>Status</th>
+        <th class="num">Seats</th>
+        <th class="num">MRR</th>
+        <th>Admin</th>
+        <th>Territories</th>
+        <th>Joined</th>
+        <th>Next invoice</th>
+      </tr></thead>
+      <tbody>
+        <tr>
+          <td class="strong">Veristone Capital<div style="color:var(--ink-3);font-weight:400;font-size:12px">veristonecapital.com · Seattle, WA</div></td>
+          <td><span class="badge active">Active</span></td>
+          <td class="num strong">12 / 12</td>
+          <td class="num strong">$2,388</td>
+          <td>Chris M. (billing admin)</td>
+          <td>WA — 3 counties</td>
+          <td class="num">Apr 22</td>
+          <td class="num">May 22</td>
+        </tr>
+        <tr style="opacity:.5">
+          <td class="strong">— No other lenders yet —</td>
+          <td colspan="7" style="color:var(--ink-3);font-style:italic">Use "Invite new lender" to onboard Anchor Loans, Kiavi, Lima One, or any reseller prospect. Each gets their own tenant, billing, admin, and AE seats.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- USERS -->
+  <div class="panel" data-p="users">
+    <div class="panel-head">
+      <div>
+        <h2>Users</h2>
+        <div class="panel-sub">AEs and admins across all lenders. Filter by lender in production.</div>
+      </div>
+      <button class="primary-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><path d="M20 8v6"/><path d="M23 11h-6"/></svg>Invite AE</button>
+    </div>
+
+    <table>
+      <thead><tr>
+        <th>User</th>
+        <th>Role</th>
+        <th>Lender</th>
+        <th>Status</th>
+        <th>Territory</th>
+        <th>Branch</th>
+        <th>NMLS</th>
+        <th>Last active</th>
+      </tr></thead>
+      <tbody>
+        <tr>
+          <td class="strong">Heath Pierce<div style="color:var(--ink-3);font-weight:400;font-size:12px">heath.pierce@veristonecapital.com · (206) 555-8172</div></td>
+          <td><span class="badge ae">AE</span></td>
+          <td>Veristone Capital</td>
+          <td><span class="badge active">Active</span></td>
+          <td>King, Pierce, Snohomish</td>
+          <td>Seattle</td>
+          <td class="num">1825519</td>
+          <td>2 min ago</td>
+        </tr>
+        <tr>
+          <td class="strong">Erin Belmore<div style="color:var(--ink-3);font-weight:400;font-size:12px">erin.belmore@veristonecapital.com · —</div></td>
+          <td><span class="badge ae">AE</span></td>
+          <td>Veristone Capital</td>
+          <td><span class="badge invited">Invited Apr 22</span></td>
+          <td>Phoenix Metro (pending)</td>
+          <td>Phoenix</td>
+          <td class="num">—</td>
+          <td>—</td>
+        </tr>
+        <tr>
+          <td class="strong">Chris Mathison<div style="color:var(--ink-3);font-weight:400;font-size:12px">chris.m@veristonecapital.com</div></td>
+          <td><span class="badge admin">Lender Admin</span></td>
+          <td>Veristone Capital</td>
+          <td><span class="badge active">Active</span></td>
+          <td>—</td>
+          <td>Seattle (HQ)</td>
+          <td class="num">—</td>
+          <td>Yesterday</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- FEEDBACK -->
+  <div class="panel" data-p="feedback">
+    <div class="panel-head">
+      <div>
+        <h2>Feedback inbox</h2>
+        <div class="panel-sub">Messages sent by AEs via the <strong>Feedback</strong> button on any page.</div>
+      </div>
+      <div><span class="sec-btn" style="cursor:default">3 unread</span></div>
+    </div>
+
+    <div class="fb-list">
+
+      <div class="fb-item unread">
+        <div class="av">HP</div>
+        <div>
+          <div class="who">Heath Pierce <span class="tag feature">FEATURE</span></div>
+          <div class="meta">Veristone · AE · from Builder Card · Apr 23, 6:47 PM</div>
+          <div class="msg">Would love to be able to filter the Builders list by "last outreach gap &gt; 14d" — right now I have to eyeball it. Maybe add a "needs follow-up" chip?</div>
+        </div>
+        <div class="stamp">Apr 23<br>6:47 PM</div>
+      </div>
+
+      <div class="fb-item unread">
+        <div class="av">HP</div>
+        <div>
+          <div class="who">Heath Pierce <span class="tag bug">BUG</span></div>
+          <div class="meta">Veristone · AE · from Permit Pipeline · Apr 22, 11:14 AM</div>
+          <div class="msg">Sound Ridge Dev's enrichment has been in "Enriching…" for 3 days. I think it's stuck. Can you check the pipeline?</div>
+        </div>
+        <div class="stamp">Apr 22<br>11:14 AM</div>
+      </div>
+
+      <div class="fb-item unread">
+        <div class="av">HP</div>
+        <div>
+          <div class="who">Heath Pierce <span class="tag praise">PRAISE</span></div>
+          <div class="meta">Veristone · AE · from Dashboard · Apr 21, 8:02 AM</div>
+          <div class="msg">The "Go get 'em" thing is cheesy and I love it. Keep it. Also — weekly digest at 6 AM is perfect, I read it during coffee.</div>
+        </div>
+        <div class="stamp">Apr 21<br>8:02 AM</div>
+      </div>
+
+      <div class="fb-item">
+        <div class="av admin">CM</div>
+        <div>
+          <div class="who">Chris Mathison <span class="tag feature">FEATURE</span></div>
+          <div class="meta">Veristone · Lender Admin · Apr 18, 3:12 PM · <span style="color:var(--success)">Resolved</span></div>
+          <div class="msg">Can we get a manager-facing view that rolls up across AEs? Heath's our first AE but we're adding Erin next week.</div>
+        </div>
+        <div class="stamp">Apr 18<br>3:12 PM</div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<script>
+  document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(x => x.classList.remove('active'));
+    t.classList.add('active');
+    document.querySelector('.panel[data-p="'+t.dataset.t+'"]').classList.add('active');
+  }));
+</script>
+
+</body>
+</html>
