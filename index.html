@@ -1,0 +1,506 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>BuilderPath — Builder Card Mockup</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --brand:#7FCF2E;
+    --brand-dark:#5FA91F;
+    --brand-soft:#EEF9DA;
+    --ink:#0F172A;
+    --ink-2:#334155;
+    --ink-3:#64748B;
+    --ink-4:#94A3B8;
+    --border:#E2E8F0;
+    --border-strong:#CBD5E1;
+    --surface:#FFFFFF;
+    --surface-2:#F8FAFC;
+    --surface-3:#F1F5F9;
+    --danger:#DC2626;
+    --danger-soft:#FEE2E2;
+    --warn:#D97706;
+    --warn-soft:#FEF3C7;
+    --success:#16A34A;
+    --success-soft:#DCFCE7;
+    --shadow-sm: 0 1px 2px rgba(15,23,42,.04), 0 1px 1px rgba(15,23,42,.03);
+    --shadow-md: 0 4px 12px rgba(15,23,42,.06), 0 2px 4px rgba(15,23,42,.04);
+    --radius:14px;
+    --radius-sm:8px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+    color:var(--ink);
+    background:var(--surface-2);
+    font-size:14px;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  .page{max-width:1100px;margin:0 auto;padding:24px}
+  .topbar{
+    display:flex;align-items:center;gap:12px;
+    padding:12px 20px;margin-bottom:24px;
+    background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+    box-shadow:var(--shadow-sm);
+  }
+  .topbar img{height:32px;width:auto}
+  .topbar .brand{font-weight:700;letter-spacing:-.01em;font-size:16px}
+  .topbar .muted{color:var(--ink-3);font-size:13px;margin-left:auto}
+
+  /* CARD */
+  .card{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow-md);
+    overflow:hidden;
+  }
+
+  /* HEADER STRIP */
+  .header{
+    display:grid;grid-template-columns:1fr auto;gap:20px;
+    padding:24px 28px 20px;
+    border-bottom:1px solid var(--border);
+    background:linear-gradient(180deg, #FCFDFB 0%, var(--surface) 100%);
+  }
+  .name-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+  .name{font-size:26px;font-weight:700;letter-spacing:-.02em;color:var(--ink)}
+  .identity{margin-top:6px;color:var(--ink-3);font-size:13.5px}
+  .identity span+span::before{content:" • ";color:var(--ink-4);padding:0 6px}
+
+  .scorebox{display:flex;align-items:center;gap:14px}
+  .score-ring{
+    width:68px;height:68px;border-radius:50%;
+    background: conic-gradient(var(--brand) 0% 87%, var(--surface-3) 87% 100%);
+    display:flex;align-items:center;justify-content:center;
+    position:relative;
+  }
+  .score-ring::after{
+    content:"";position:absolute;inset:6px;background:var(--surface);border-radius:50%;
+  }
+  .score-ring .val{
+    position:relative;z-index:1;font-weight:700;font-size:20px;color:var(--ink);
+  }
+  .score-meta{font-size:12px;color:var(--ink-3);line-height:1.3}
+  .score-meta .pri{font-weight:600;color:var(--ink);font-size:13px;letter-spacing:.02em;text-transform:uppercase}
+
+  /* BADGES */
+  .badge{
+    display:inline-flex;align-items:center;gap:6px;
+    padding:4px 10px;border-radius:999px;font-size:12px;font-weight:600;
+    letter-spacing:.02em;
+  }
+  .badge.hot{background:#FEE7E2;color:#B91C1C}
+  .badge.hot .dot{width:6px;height:6px;border-radius:50%;background:#DC2626}
+  .badge.stage{background:var(--brand-soft);color:var(--brand-dark);border:1px solid #D5ED9F}
+  .badge.dnc-clear{background:var(--success-soft);color:var(--success)}
+  .badge.dnc-blocked{background:var(--danger-soft);color:var(--danger)}
+  .badge.license-active{background:var(--success-soft);color:var(--success)}
+  .badge.neutral{background:var(--surface-3);color:var(--ink-2);border:1px solid var(--border)}
+
+  /* ACTION BAR */
+  .actions{
+    display:flex;gap:10px;padding:16px 28px;
+    border-bottom:1px solid var(--border);
+    background:var(--surface);
+    flex-wrap:wrap;
+  }
+  .btn{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:9px 14px;font-size:13.5px;font-weight:600;
+    border-radius:10px;border:1px solid var(--border-strong);
+    background:var(--surface);color:var(--ink);
+    cursor:pointer;transition:all .12s ease;
+    font-family:inherit;
+  }
+  .btn:hover{background:var(--surface-2);border-color:var(--ink-4)}
+  .btn.primary{background:var(--brand);color:#17301A;border-color:var(--brand-dark)}
+  .btn.primary:hover{background:var(--brand-dark);color:#fff}
+  .btn svg{width:15px;height:15px}
+
+  /* METRICS GRID */
+  .metrics{
+    display:grid;grid-template-columns:repeat(6,1fr);gap:0;
+    border-bottom:1px solid var(--border);
+  }
+  .metric{
+    padding:18px 20px;border-right:1px solid var(--border);
+  }
+  .metric:last-child{border-right:none}
+  .metric .label{
+    font-size:11px;text-transform:uppercase;letter-spacing:.08em;
+    color:var(--ink-3);font-weight:600;margin-bottom:6px;
+  }
+  .metric .value{font-size:22px;font-weight:700;color:var(--ink);letter-spacing:-.01em}
+  .metric .sub{font-size:12px;color:var(--ink-3);margin-top:2px}
+
+  /* BODY TWO-COL */
+  .body{display:grid;grid-template-columns:1.3fr 1fr;gap:0}
+  .body > section{padding:22px 28px}
+  .body > section:first-child{border-right:1px solid var(--border)}
+  section h3{
+    margin:0 0 12px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--ink-3);font-weight:700;
+  }
+
+  .contact{display:flex;flex-direction:column;gap:6px}
+  .contact .who{font-weight:600;font-size:15px;color:var(--ink)}
+  .contact .title{color:var(--ink-3);font-size:13px;margin-bottom:6px}
+  .contact a{color:var(--ink);text-decoration:none;display:inline-flex;align-items:center;gap:7px}
+  .contact a:hover{color:var(--brand-dark)}
+  .contact a svg{width:14px;height:14px;color:var(--ink-3)}
+  .contact .row{display:flex;align-items:center;gap:10px;font-size:13.5px}
+  .socials{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+  .chip{
+    display:inline-flex;align-items:center;gap:6px;padding:5px 10px;
+    border:1px solid var(--border);border-radius:999px;
+    font-size:12px;color:var(--ink-2);background:var(--surface);text-decoration:none;
+  }
+  .chip:hover{border-color:var(--brand);color:var(--brand-dark)}
+  .chip svg{width:12px;height:12px}
+
+  /* ACTIVITY TIMELINE */
+  .activity{display:flex;flex-direction:column;gap:12px}
+  .event{display:grid;grid-template-columns:76px 1fr;gap:12px;font-size:13.5px}
+  .event .when{color:var(--ink-3);font-variant-numeric:tabular-nums;font-size:12.5px}
+  .event .what{color:var(--ink)}
+  .event .what .kind{
+    display:inline-block;font-size:10.5px;font-weight:700;padding:1px 7px;
+    border-radius:4px;margin-right:6px;vertical-align:1px;letter-spacing:.04em;
+  }
+  .event .what .kind.permit{background:var(--brand-soft);color:var(--brand-dark)}
+  .event .what .kind.lot{background:#E0F2FE;color:#0369A1}
+  .event .what .kind.email{background:#FEF3C7;color:#92400E}
+  .event .what .kind.call{background:#F3E8FF;color:#6B21A8}
+  .event .what .kind.note{background:var(--surface-3);color:var(--ink-2)}
+
+  .next{
+    margin-top:14px;padding:12px 14px;border-radius:var(--radius-sm);
+    background:var(--brand-soft);border:1px solid #D5ED9F;
+    display:flex;align-items:center;gap:10px;font-size:13.5px;color:#1E3A12;
+  }
+  .next strong{font-weight:600;color:#142A0B}
+
+  /* TABS */
+  .tabs{display:flex;gap:4px;padding:0 28px;border-bottom:1px solid var(--border);background:var(--surface)}
+  .tab{
+    padding:14px 16px;border:none;background:transparent;cursor:pointer;
+    font-family:inherit;font-size:13.5px;font-weight:600;color:var(--ink-3);
+    border-bottom:2px solid transparent;margin-bottom:-1px;
+  }
+  .tab:hover{color:var(--ink)}
+  .tab.active{color:var(--ink);border-bottom-color:var(--brand)}
+  .tab .count{
+    display:inline-block;margin-left:6px;font-size:11px;padding:1px 7px;
+    background:var(--surface-3);color:var(--ink-2);border-radius:999px;font-weight:600;
+  }
+
+  .tabpanel{padding:20px 28px;display:none}
+  .tabpanel.active{display:block}
+
+  /* TABLES */
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th{
+    text-align:left;font-weight:600;color:var(--ink-3);font-size:11px;
+    text-transform:uppercase;letter-spacing:.06em;
+    padding:10px 12px;border-bottom:1px solid var(--border);
+  }
+  td{padding:12px;border-bottom:1px solid var(--border);color:var(--ink-2);vertical-align:top}
+  tr:last-child td{border-bottom:none}
+  td.num{font-variant-numeric:tabular-nums;text-align:right}
+  td.strong{color:var(--ink);font-weight:600}
+  .src{
+    display:inline-block;font-size:10.5px;padding:1px 6px;border-radius:4px;
+    background:var(--surface-3);color:var(--ink-3);font-weight:600;letter-spacing:.04em;
+  }
+
+  /* MOBILE */
+  @media (max-width: 860px){
+    .metrics{grid-template-columns:repeat(2,1fr)}
+    .metric{border-right:1px solid var(--border);border-bottom:1px solid var(--border)}
+    .metric:nth-child(2n){border-right:none}
+    .metric:nth-last-child(-n+2){border-bottom:none}
+    .body{grid-template-columns:1fr}
+    .body > section:first-child{border-right:none;border-bottom:1px solid var(--border)}
+    .header{grid-template-columns:1fr}
+    .scorebox{margin-top:8px}
+    .tabs{overflow-x:auto;white-space:nowrap;padding:0 16px}
+    .tabpanel{padding:16px}
+    .actions,.header{padding-left:20px;padding-right:20px}
+  }
+
+  .foot{
+    text-align:center;color:var(--ink-4);font-size:12px;padding:24px 0;
+  }
+  .foot code{font-family:'JetBrains Mono',ui-monospace,monospace;background:var(--surface-3);padding:1px 6px;border-radius:4px;color:var(--ink-3);font-size:11px}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="topbar">
+    <img src="./logo.png" alt="BuilderPath" />
+    <div class="brand">BuilderPath</div>
+    <div class="muted">Builder Profile · Mockup · 2026-04-23</div>
+  </div>
+
+  <div class="card">
+
+    <!-- HEADER -->
+    <div class="header">
+      <div>
+        <div class="name-row">
+          <div class="name">Evergreen Homes LLC</div>
+          <span class="badge hot"><span class="dot"></span> HOT</span>
+          <span class="badge stage">Meeting Scheduled</span>
+          <span class="badge dnc-clear">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" width="12" height="12"><path d="M5 12l5 5L20 7"/></svg>
+            DNC Clear
+          </span>
+        </div>
+        <div class="identity">
+          <span>LLC · Oregon</span>
+          <span>Est. 2019 <em style="color:var(--ink-4);font-style:normal">(7 yrs)</em></span>
+          <span>UBI 604 327 118</span>
+          <span>L&amp;I <strong style="color:var(--ink-2);font-weight:600">EVERGH*821KQ</strong></span>
+          <span class="badge license-active" style="padding:2px 8px;font-size:11px">Active · Bonded</span>
+        </div>
+      </div>
+
+      <div class="scorebox">
+        <div class="score-ring"><span class="val">87</span></div>
+        <div class="score-meta">
+          <div class="pri">Composite Score</div>
+          <div>Queue priority: <strong style="color:#B91C1C">Hot</strong></div>
+          <div>Last recompute: 2026-04-22</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ACTIONS -->
+    <div class="actions">
+      <button class="btn primary">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92V21a1 1 0 0 1-1.09 1 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 3.09 4.18 1 1 0 0 1 4.08 3h4.09a1 1 0 0 1 1 .75l1 4a1 1 0 0 1-.29 1L8.21 10.2a16 16 0 0 0 6 6l1.45-1.67a1 1 0 0 1 1-.29l4 1a1 1 0 0 1 .75 1z"/></svg>
+        Call Sarah
+      </button>
+      <button class="btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z"/><path d="M4 4l8 8 8-8"/></svg>
+        Draft Email
+      </button>
+      <button class="btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        Log Job Site Visit
+      </button>
+      <button class="btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>
+        Quick Note
+      </button>
+      <button class="btn" style="margin-left:auto">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>
+        Report Issue
+      </button>
+    </div>
+
+    <!-- METRICS -->
+    <div class="metrics">
+      <div class="metric">
+        <div class="label">Lots Purchased</div>
+        <div class="value">2</div>
+        <div class="sub">last 180 days</div>
+      </div>
+      <div class="metric">
+        <div class="label">Permits Pulled</div>
+        <div class="value">3</div>
+        <div class="sub">all New SFR</div>
+      </div>
+      <div class="metric">
+        <div class="label">Avg Lot Purchase</div>
+        <div class="value">$318K</div>
+        <div class="sub">trailing 12 mo</div>
+      </div>
+      <div class="metric">
+        <div class="label">Permit Value (180d)</div>
+        <div class="value">$2.41M</div>
+        <div class="sub">est. project cost</div>
+      </div>
+      <div class="metric">
+        <div class="label">Calls (90d)</div>
+        <div class="value">3</div>
+        <div class="sub">2 connected · 1 VM</div>
+      </div>
+      <div class="metric">
+        <div class="label">Emails (90d)</div>
+        <div class="value">4</div>
+        <div class="sub">2 opened · 1 reply</div>
+      </div>
+    </div>
+
+    <!-- BODY: CONTACT + ACTIVITY -->
+    <div class="body">
+
+      <section>
+        <h3>Primary Contact &amp; Links</h3>
+        <div class="contact">
+          <div class="who">Sarah Chen</div>
+          <div class="title">Member-Manager · Evergreen Homes LLC</div>
+          <div class="row">
+            <a href="tel:+14255550192">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92V21a1 1 0 0 1-1.09 1 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 3.09 4.18 1 1 0 0 1 4.08 3h4.09a1 1 0 0 1 1 .75l1 4a1 1 0 0 1-.29 1L8.21 10.2a16 16 0 0 0 6 6l1.45-1.67a1 1 0 0 1 1-.29l4 1a1 1 0 0 1 .75 1z"/></svg>
+              (425) 555-0192
+            </a>
+            <span class="src">L&amp;I</span>
+          </div>
+          <div class="row">
+            <a href="mailto:sarah@evergreenhomes.build">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z"/><path d="M4 4l8 8 8-8"/></svg>
+              sarah@evergreenhomes.build
+            </a>
+            <span class="src">Apollo</span>
+          </div>
+          <div class="row">
+            <a href="https://evergreenhomes.build" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15 15 0 0 1 0 20 15 15 0 0 1 0-20z"/></svg>
+              evergreenhomes.build
+            </a>
+            <span class="src">Tavily</span>
+          </div>
+
+          <div class="socials">
+            <a class="chip" href="#"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9h4v12H3zM10 9h3.8v1.7h.06c.53-1 1.84-2.05 3.78-2.05 4.04 0 4.79 2.66 4.79 6.12V21h-4v-5.3c0-1.27-.02-2.9-1.77-2.9-1.77 0-2.04 1.38-2.04 2.8V21h-4V9z"/></svg> LinkedIn</a>
+            <a class="chip" href="#"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.16c3.2 0 3.58.01 4.85.07 1.17.05 1.8.25 2.23.42.56.22.96.48 1.38.9.42.42.68.82.9 1.38.17.42.37 1.06.42 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.8-.42 2.23a3.7 3.7 0 0 1-.9 1.38 3.7 3.7 0 0 1-1.38.9c-.42.17-1.06.37-2.23.42-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.25-2.23-.42a3.7 3.7 0 0 1-1.38-.9 3.7 3.7 0 0 1-.9-1.38c-.17-.42-.37-1.06-.42-2.23C2.17 15.58 2.16 15.2 2.16 12s.01-3.58.07-4.85c.05-1.17.25-1.8.42-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.17 1.06-.37 2.23-.42C8.42 2.17 8.8 2.16 12 2.16zM12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10zm0 8.25a3.25 3.25 0 1 1 0-6.5 3.25 3.25 0 0 1 0 6.5zm5.25-9.44a1.17 1.17 0 1 0 0 2.34 1.17 1.17 0 0 0 0-2.34z"/></svg> Instagram</a>
+            <a class="chip" href="#"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M22 12a10 10 0 1 0-11.56 9.88v-7H7.9V12h2.54V9.8c0-2.5 1.49-3.89 3.77-3.89 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56V12h2.78l-.44 2.88h-2.34v7A10 10 0 0 0 22 12z"/></svg> Facebook</a>
+            <a class="chip" href="#"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 3h18v18H3zM7 7v10h3v-4h4v4h3V7h-3v4h-4V7z"/></svg> Houzz</a>
+            <a class="chip" href="#"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/></svg> X / Twitter</a>
+          </div>
+
+          <div style="margin-top:14px;padding:10px 12px;background:var(--surface-2);border-radius:var(--radius-sm);font-size:12.5px;color:var(--ink-3)">
+            <strong style="color:var(--ink-2)">Principals (SOS):</strong> Sarah Chen (Governor), Daniel Chen (Member) · Agent: NW Registered Agents Inc.
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h3>Recent Activity</h3>
+        <div class="activity">
+          <div class="event"><div class="when">Apr 19</div><div class="what"><span class="kind email">EMAIL</span> Sarah replied: "Let's connect next week" — proposed Fri 10 AM PT</div></div>
+          <div class="event"><div class="when">Apr 18</div><div class="what"><span class="kind permit">PERMIT</span> New SFR — 18234 NE 104th Pl, Bothell · $872K · 2,920 sqft</div></div>
+          <div class="event"><div class="when">Apr 15</div><div class="what"><span class="kind call">CALL</span> Connected · 8 min · discussed spec financing needs</div></div>
+          <div class="event"><div class="when">Apr 10</div><div class="what"><span class="kind email">EMAIL</span> AE draft approved, sent: "Financing options for your Bothell build"</div></div>
+          <div class="event"><div class="when">Mar 02</div><div class="what"><span class="kind permit">PERMIT</span> New SFR — 12020 Fremont Ave N, Seattle · $795K</div></div>
+          <div class="event"><div class="when">Feb 14</div><div class="what"><span class="kind lot">LOT</span> Purchased 2826059123, King Co · $348K · 0.22 ac</div></div>
+        </div>
+        <div class="next">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          <div><strong>Next action</strong> — Call Sarah <strong>Fri Apr 25 · 10:00 AM PT</strong> re: Bothell permit financing</div>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- TABS -->
+    <div class="tabs">
+      <button class="tab active" data-tab="permits">Permits <span class="count">3</span></button>
+      <button class="tab" data-tab="lots">Lot Purchases <span class="count">2</span></button>
+      <button class="tab" data-tab="outreach">Outreach <span class="count">7</span></button>
+      <button class="tab" data-tab="projects">Past Projects <span class="count">2</span></button>
+      <button class="tab" data-tab="team">Team &amp; Licensing</button>
+      <button class="tab" data-tab="notes">Notes</button>
+    </div>
+
+    <div class="tabpanel active" data-panel="permits">
+      <table>
+        <thead><tr><th>Issued</th><th>Jurisdiction</th><th>Address</th><th>Type</th><th class="num">Valuation</th><th class="num">Sqft</th><th>Status</th><th>Source</th></tr></thead>
+        <tbody>
+          <tr><td>2026-04-18</td><td>Bothell / MBP</td><td class="strong">18234 NE 104th Pl</td><td>New SFR</td><td class="num strong">$872,000</td><td class="num">2,920</td><td><span class="badge neutral">Issued</span></td><td><span class="src">ATTOM</span></td></tr>
+          <tr><td>2026-03-02</td><td>Seattle</td><td class="strong">12020 Fremont Ave N</td><td>New SFR</td><td class="num strong">$795,000</td><td class="num">2,840</td><td><span class="badge neutral">Issued</span></td><td><span class="src">ATTOM</span></td></tr>
+          <tr><td>2026-01-27</td><td>Seattle</td><td class="strong">9411 Stone Ave N</td><td>New SFR</td><td class="num strong">$744,000</td><td class="num">2,790</td><td><span class="badge license-active" style="padding:2px 8px;font-size:11px">Finaled</span></td><td><span class="src">ATTOM</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="tabpanel" data-panel="lots">
+      <table>
+        <thead><tr><th>Recorded</th><th>County</th><th>Parcel / APN</th><th>Address</th><th class="num">Price</th><th class="num">Acres</th><th>Zoning</th></tr></thead>
+        <tbody>
+          <tr><td>2026-02-14</td><td>King</td><td>2826059123</td><td class="strong">18234 NE 104th Pl, Bothell</td><td class="num strong">$348,000</td><td class="num">0.22</td><td>R-6</td></tr>
+          <tr><td>2025-11-14</td><td>Snohomish</td><td>00437800001900</td><td class="strong">11411 3rd Ave SE, Everett</td><td class="num strong">$289,500</td><td class="num">0.18</td><td>R-9,600</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="tabpanel" data-panel="outreach">
+      <table>
+        <thead><tr><th>Date</th><th>Channel</th><th>Direction</th><th>Subject / Summary</th><th>Outcome</th><th>AE</th></tr></thead>
+        <tbody>
+          <tr><td>2026-04-19</td><td>Email</td><td>Inbound</td><td class="strong">Re: Financing options for your Bothell build</td><td><span class="badge license-active" style="padding:2px 8px;font-size:11px">Replied — positive</span></td><td>Heath P.</td></tr>
+          <tr><td>2026-04-15</td><td>Call</td><td>Outbound</td><td>Intro + discovery, 8 min connected</td><td><span class="badge license-active" style="padding:2px 8px;font-size:11px">Connected</span></td><td>Heath P.</td></tr>
+          <tr><td>2026-04-10</td><td>Email</td><td>Outbound</td><td class="strong">Financing options for your Bothell build</td><td><span class="badge neutral">Opened</span></td><td>Heath P.</td></tr>
+          <tr><td>2026-03-10</td><td>Email</td><td>Outbound</td><td class="strong">Congrats on the Fremont permit</td><td><span class="badge neutral">Opened · no reply</span></td><td>Heath P.</td></tr>
+          <tr><td>2026-02-20</td><td>Email</td><td>Draft</td><td>AI draft — AE revised, not sent</td><td><span class="badge neutral">Revised</span></td><td>Heath P.</td></tr>
+          <tr><td>2026-02-18</td><td>Call</td><td>Outbound</td><td>Voicemail, no callback</td><td><span class="badge neutral">No answer</span></td><td>Heath P.</td></tr>
+          <tr><td>2026-01-30</td><td>Call</td><td>Outbound</td><td>First connect, 3 min</td><td><span class="badge license-active" style="padding:2px 8px;font-size:11px">Connected</span></td><td>Heath P.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="tabpanel" data-panel="projects">
+      <table>
+        <thead><tr><th>Project</th><th>Source</th><th>Year</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr><td class="strong">Kirkland Modern 2200</td><td><a href="#" style="color:var(--ink-2)">houzz.com/pro/evergreen-homes/kirkland-modern</a></td><td>2024</td><td>Build of the Year Finalist · 2,200 sqft contemporary</td></tr>
+          <tr><td class="strong">Sammamish Ridge</td><td><a href="#" style="color:var(--ink-2)">evergreenhomes.build/projects/sammamish-ridge</a></td><td>2024</td><td>3-home infill subdivision</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="tabpanel" data-panel="team">
+      <table>
+        <thead><tr><th>Name</th><th>Role</th><th>Source</th><th>Confidence</th></tr></thead>
+        <tbody>
+          <tr><td class="strong">Sarah Chen</td><td>Governor, Member-Manager</td><td><span class="src">WA SOS</span></td><td><span class="badge license-active" style="padding:2px 8px;font-size:11px">High</span></td></tr>
+          <tr><td class="strong">Daniel Chen</td><td>Member</td><td><span class="src">WA SOS</span></td><td><span class="badge license-active" style="padding:2px 8px;font-size:11px">High</span></td></tr>
+          <tr><td>NW Registered Agents Inc.</td><td>Registered Agent</td><td><span class="src">WA SOS</span></td><td>—</td></tr>
+        </tbody>
+      </table>
+      <div style="margin-top:14px;padding:12px 14px;background:var(--surface-2);border-radius:var(--radius-sm);font-size:13px;color:var(--ink-2)">
+        <strong>L&amp;I Contractor License</strong> · EVERGH*821KQ · Status: Active · Bond: $12,000 (Contractors Bonding &amp; Ins. Co.) · Bond expires 2026-08-14 · COI on file
+      </div>
+    </div>
+
+    <div class="tabpanel" data-panel="notes">
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div style="padding:12px 14px;background:var(--surface-2);border-radius:var(--radius-sm)">
+          <div style="font-size:12px;color:var(--ink-3);margin-bottom:4px">2026-04-15 · Heath Pierce</div>
+          <div>Sarah mentioned they're targeting 4 starts this year in Bothell/Kirkland corridor. Interested in bridge financing if they can close in 10 days. Not currently tied to one lender — shopped around in 2025.</div>
+        </div>
+        <div style="padding:12px 14px;background:var(--surface-2);border-radius:var(--radius-sm)">
+          <div style="font-size:12px;color:var(--ink-3);margin-bottom:4px">2026-04-10 · Heath Pierce</div>
+          <div>Site visit Fremont build — clean job site, framing 80% done. Sarah friendly, gave me her cell. Daniel does the books.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="foot">
+    Mockup · static representation only — data, names, and permit numbers are illustrative. Theme accent sampled from <code>logo.png</code>.
+  </div>
+
+</div>
+
+<script>
+  document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+    document.querySelectorAll('.tabpanel').forEach(x => x.classList.remove('active'));
+    t.classList.add('active');
+    document.querySelector('.tabpanel[data-panel="'+t.dataset.tab+'"]').classList.add('active');
+  }));
+</script>
+</body>
+</html>
