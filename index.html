@@ -1,320 +1,379 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>BuilderPath — Dashboard</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>BuilderPath — Dashboard (Populated Mockup)</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          brand: { DEFAULT: "#7FCF2E", dark: "#5FA91F", soft: "#EEF9DA", ink: "#17301A" },
+        },
+      },
+    },
+  };
+</script>
 <style>
-  :root{--brand:#7FCF2E;--brand-dark:#5FA91F;--brand-soft:#EEF9DA;--ink:#0F172A;--ink-2:#334155;--ink-3:#64748B;--ink-4:#94A3B8;--border:#E2E8F0;--border-strong:#CBD5E1;--surface:#FFFFFF;--surface-2:#F8FAFC;--surface-3:#F1F5F9;--danger:#DC2626;--danger-soft:#FEE2E2;--warn:#D97706;--warn-soft:#FEF3C7;--success:#16A34A;--success-soft:#DCFCE7;--info:#0369A1;--info-soft:#E0F2FE;--shadow-sm:0 1px 2px rgba(15,23,42,.04),0 1px 1px rgba(15,23,42,.03);--shadow-md:0 4px 12px rgba(15,23,42,.06),0 2px 4px rgba(15,23,42,.04);--radius:14px;--radius-sm:8px}
-  *{box-sizing:border-box}html,body{margin:0;padding:0}
-  body{font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--surface-2);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
-  .topnav{display:flex;align-items:center;gap:14px;padding:14px 28px;background:var(--surface);border-bottom:1px solid var(--border);box-shadow:var(--shadow-sm);position:sticky;top:0;z-index:10}
-  .topnav .logo{height:30px;width:auto}
-  .topnav .brand{font-weight:700;font-size:16px;letter-spacing:-.01em;color:var(--ink)}
-  .topnav nav{display:flex;gap:2px;margin-left:16px}
-  .topnav nav a{padding:8px 12px;border-radius:8px;font-size:13.5px;font-weight:600;color:var(--ink-3);text-decoration:none;transition:all .12s}
-  .topnav nav a:hover{background:var(--surface-2);color:var(--ink)}
-  .topnav nav a.active{color:var(--ink);background:var(--brand-soft)}
-  .topnav nav a.admin{color:var(--ink-4);border-left:1px solid var(--border);margin-left:6px;padding-left:14px}
-  .topnav nav a.admin:hover{color:var(--ink-2)}
-  .topnav .spacer{flex:1}
-  .fb-btn{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border:1px solid var(--border);border-radius:999px;background:var(--surface);color:var(--ink-2);font-size:13px;font-weight:600;cursor:pointer;font-family:inherit}
-  .fb-btn:hover{border-color:var(--brand);color:var(--brand-dark)}
-  .fb-btn svg{width:14px;height:14px}
-  .topnav .ae{display:flex;align-items:center;gap:10px;padding:6px 14px 6px 6px;border:1px solid var(--border);border-radius:999px;font-size:13px}
-  .topnav .ae .av{width:28px;height:28px;border-radius:50%;background:var(--brand);color:#17301A;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px}
-  .topnav .ae .name{font-weight:600}
-  .topnav .ae .role{color:var(--ink-3);font-size:12px}
-
-  .page{max-width:1320px;margin:0 auto;padding:24px 28px 48px}
-
-  /* HERO */
-  .hero{
-    background:linear-gradient(135deg, var(--brand) 0%, var(--brand-dark) 100%);
-    color:#17301A;border-radius:var(--radius);padding:24px 28px;
-    display:flex;align-items:center;gap:24px;margin-bottom:20px;box-shadow:var(--shadow-md);
-  }
-  .hero .greeting{flex:1}
-  .hero .greeting .hi{font-size:22px;font-weight:700;letter-spacing:-.01em;color:#0F1F09}
-  .hero .greeting .sub{margin-top:6px;font-size:14.5px;color:#1E3A12;line-height:1.55;max-width:620px}
-  .hero .go{font-size:42px;font-weight:800;letter-spacing:-.02em;color:#0F1F09;white-space:nowrap}
-
-  /* KPI ROW */
-  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
-  .kpi{
-    background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
-    padding:16px 18px;box-shadow:var(--shadow-sm);
-  }
-  .kpi .label{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-3);font-weight:600}
-  .kpi .val{font-size:30px;font-weight:700;letter-spacing:-.02em;margin-top:4px}
-  .kpi .delta{font-size:12.5px;color:var(--ink-3);margin-top:2px}
-  .kpi .delta.up{color:var(--success)}
-  .kpi .delta.down{color:var(--danger)}
-  .kpi.hot .val{color:#B91C1C}
-  .kpi.warn .val{color:var(--warn)}
-
-  /* MAIN GRID */
-  .main{display:grid;grid-template-columns:1.35fr 1fr;gap:20px}
-  .card{
-    background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
-    box-shadow:var(--shadow-md);overflow:hidden;
-  }
-  .card h2{
-    margin:0;padding:16px 20px;font-size:14px;font-weight:700;letter-spacing:-.01em;
-    border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;
-  }
-  .card h2 .link{font-size:12.5px;color:var(--brand-dark);text-decoration:none;font-weight:600}
-  .card h2 .link:hover{text-decoration:underline}
-
-  /* PRIORITY LIST */
-  .prio{padding:4px 0}
-  .prio-row{
-    display:grid;grid-template-columns:44px 1fr auto;gap:14px;
-    padding:14px 20px;border-bottom:1px solid var(--border);align-items:center;
-    text-decoration:none;color:inherit;cursor:pointer;
-  }
-  .prio-row:last-child{border-bottom:none}
-  .prio-row:hover{background:var(--surface-2)}
-  .prio-rank{
-    width:32px;height:32px;border-radius:50%;background:var(--surface-3);
-    display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--ink-2);font-size:13px;
-  }
-  .prio-row.hot .prio-rank{background:#FEE7E2;color:#B91C1C}
-  .prio-main .name{font-weight:600;color:var(--ink);font-size:14.5px}
-  .prio-main .sub{color:var(--ink-3);font-size:12.5px;margin-top:2px}
-  .prio-main .kind{
-    display:inline-block;font-size:10.5px;font-weight:700;padding:1px 7px;border-radius:4px;margin-right:6px;
-    letter-spacing:.04em;vertical-align:1px;
-  }
-  .prio-main .kind.permit{background:var(--brand-soft);color:var(--brand-dark)}
-  .prio-main .kind.lot{background:var(--info-soft);color:var(--info)}
-  .prio-main .kind.overdue{background:var(--danger-soft);color:var(--danger)}
-  .prio-main .kind.new{background:var(--warn-soft);color:var(--warn)}
-  .prio-cta{
-    padding:7px 14px;border-radius:8px;background:var(--brand);color:#17301A;
-    font-weight:600;font-size:13px;border:1px solid var(--brand-dark);white-space:nowrap;cursor:pointer;font-family:inherit;
-  }
-  .prio-cta:hover{background:var(--brand-dark);color:#fff}
-  .prio-cta.sec{background:var(--surface);color:var(--ink);border-color:var(--border-strong)}
-  .prio-cta.sec:hover{background:var(--surface-2)}
-
-  /* RIGHT COLUMN BLOCKS */
-  .right-col{display:flex;flex-direction:column;gap:20px}
-  .bar{display:flex;flex-direction:column;gap:10px;padding:16px 20px}
-  .bar-row{display:grid;grid-template-columns:110px 1fr 56px;gap:10px;align-items:center;font-size:13px}
-  .bar-row .lbl{color:var(--ink-2)}
-  .bar-row .track{height:8px;background:var(--surface-3);border-radius:999px;overflow:hidden}
-  .bar-row .fill{height:100%;background:var(--brand);border-radius:999px}
-  .bar-row .val{text-align:right;font-variant-numeric:tabular-nums;font-weight:600;color:var(--ink)}
-  .bar-row .fill.warn{background:var(--warn)}
-  .bar-row .fill.info{background:var(--info)}
-
-  /* ACTIVITY STREAM */
-  .stream{padding:4px 0}
-  .stream-row{
-    display:grid;grid-template-columns:64px 1fr;gap:12px;
-    padding:12px 20px;border-bottom:1px solid var(--border);font-size:13.5px;
-  }
-  .stream-row:last-child{border-bottom:none}
-  .stream .when{color:var(--ink-3);font-size:12px;font-variant-numeric:tabular-nums}
-  .stream .what{color:var(--ink-2)}
-  .stream .what .actor{color:var(--ink);font-weight:600}
-  .stream .what .kind{display:inline-block;font-size:10.5px;font-weight:700;padding:1px 7px;border-radius:4px;margin-right:6px;letter-spacing:.04em;vertical-align:1px}
-  .stream .what .kind.win{background:var(--success-soft);color:var(--success)}
-  .stream .what .kind.reply{background:var(--warn-soft);color:var(--warn)}
-  .stream .what .kind.start{background:var(--brand-soft);color:var(--brand-dark)}
-
-  /* WINS CARD */
-  .wins{padding:20px}
-  .wins .big{font-size:36px;font-weight:800;letter-spacing:-.02em;color:var(--ink)}
-  .wins .big .unit{font-size:14px;font-weight:600;color:var(--ink-3);margin-left:6px}
-  .wins .caption{font-size:13px;color:var(--ink-3);margin-top:4px;line-height:1.55}
-  .wins .splits{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:14px}
-  .wins .split{padding:10px 12px;background:var(--surface-2);border-radius:var(--radius-sm)}
-  .wins .split .lbl{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-3);font-weight:600}
-  .wins .split .v{font-weight:700;color:var(--ink);font-size:18px;margin-top:2px}
-
-  /* FEEDBACK MODAL */
-  .overlay{display:none;position:fixed;inset:0;background:rgba(15,23,42,.4);backdrop-filter:blur(2px);z-index:100;align-items:center;justify-content:center}
-  .overlay.open{display:flex}
-  .modal{background:var(--surface);border-radius:var(--radius);box-shadow:0 20px 50px rgba(15,23,42,.2);padding:24px 26px;max-width:460px;width:calc(100% - 40px)}
-  .modal h3{margin:0 0 4px;font-size:18px;font-weight:700;letter-spacing:-.01em}
-  .modal p{margin:0 0 16px;color:var(--ink-3);font-size:13px}
-  .modal textarea{width:100%;min-height:120px;padding:12px;border:1px solid var(--border-strong);border-radius:8px;font:inherit;font-size:13.5px;resize:vertical;color:var(--ink)}
-  .modal textarea:focus{outline:none;border-color:var(--brand)}
-  .modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:14px}
-  .btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:8px;border:1px solid var(--border-strong);background:var(--surface);color:var(--ink);font-size:13.5px;font-weight:600;cursor:pointer;font-family:inherit}
-  .btn:hover{background:var(--surface-2)}
-  .btn.primary{background:var(--brand);color:#17301A;border-color:var(--brand-dark)}
-  .btn.primary:hover{background:var(--brand-dark);color:#fff}
-
-  @media (max-width:960px){.page{padding:16px}.main{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(2,1fr)}.hero{flex-direction:column;align-items:flex-start}.hero .go{font-size:30px}.topnav{padding:10px 14px}.topnav nav{overflow-x:auto;white-space:nowrap}}
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif; }
+  .ring-bg { stroke: #f3f4f6; }
+  .ring-fg { stroke-linecap: round; transition: stroke-dashoffset .3s ease; }
 </style>
 </head>
-<body>
+<body class="min-h-screen bg-gray-50">
 
-<div class="topnav">
-  <img src="./logo.png" class="logo" alt="BuilderPath">
-  <span class="brand">BuilderPath</span>
-  <nav>
-    <a href="./" class="active">Dashboard</a>
-    <a href="./transactions.html">Transactions</a>
-    <a href="./permit-pipeline.html">Permit Pipeline</a>
-    <a href="./builders.html">Builders</a>
-    <a href="./admin.html" class="admin">Admin</a>
-  </nav>
-  <div class="spacer"></div>
-  <button class="fb-btn" onclick="document.getElementById('fb').classList.add('open')">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-    Feedback
-  </button>
-  <div class="ae"><span class="av">HP</span><span><span class="name">Heath Pierce</span><br><span class="role">AE · Seattle Metro</span></span></div>
-</div>
+<!-- Nav -->
+<header class="bg-white border-b border-gray-200 sticky top-0 z-10">
+  <div class="max-w-7xl mx-auto px-6 h-14 flex items-center justify-between gap-6">
+    <a href="./index.html" class="flex items-center gap-2 shrink-0">
+      <span class="w-7 h-7 rounded bg-brand-ink text-white flex items-center justify-center text-xs font-bold">BP</span>
+      <span class="text-sm font-semibold text-gray-900 tracking-tight">BuilderPath</span>
+    </a>
+    <nav class="flex items-center gap-1 flex-1">
+      <a href="./index.html" class="px-3.5 py-1.5 rounded-full text-sm font-medium bg-brand-soft text-brand-dark whitespace-nowrap">Dashboard</a>
+      <a href="./transactions.html" class="px-3.5 py-1.5 rounded-full text-sm font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100 whitespace-nowrap">Transactions</a>
+      <a href="./permit-pipeline.html" class="px-3.5 py-1.5 rounded-full text-sm font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100 whitespace-nowrap">Permit Pipeline</a>
+      <a href="./builders.html" class="px-3.5 py-1.5 rounded-full text-sm font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100 whitespace-nowrap">Builders</a>
+      <a href="./admin.html" class="px-3.5 py-1.5 rounded-full text-sm font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100 whitespace-nowrap">Admin</a>
+    </nav>
+    <div class="flex items-center gap-3 shrink-0">
+      <a href="./builder-card.html" class="text-xs font-medium text-gray-500 border border-gray-200 rounded-full px-3 py-1.5">Feedback</a>
 
-<div class="page">
+      <!-- Lender chip (fictional lender — replace with real one when permission granted) -->
+      <div class="hidden md:flex items-center gap-2 pl-3 border-l border-gray-200">
+        <div class="w-8 h-8 rounded-md bg-gradient-to-br from-blue-600 to-blue-800 flex items-center justify-center text-white text-[10px] font-bold">CC</div>
+        <span class="text-xs font-medium text-gray-700 max-w-[140px] truncate">Cascadia Capital</span>
+      </div>
 
-  <!-- HERO -->
-  <div class="hero">
-    <div class="greeting">
-      <div class="hi">Good morning, Heath.</div>
-      <div class="sub">Your weekly cron ran at 6 AM. <strong>12 new transactions, 15 new permits, 4 new builders</strong> added. Three hot leads need your attention today — Evergreen Homes pulled another permit overnight, Northline is ready for a term sheet, and Rainshadow is two days overdue on first outreach.</div>
+      <div class="flex items-center gap-2">
+        <a href="./builder-card.html" class="w-8 h-8 rounded-full bg-brand flex items-center justify-center text-xs font-bold text-brand-ink">MD</a>
+        <div class="hidden sm:flex flex-col leading-none">
+          <span class="text-xs font-medium text-gray-800">Mark Donovan</span>
+          <span class="text-[10px] text-gray-400 capitalize">ae</span>
+        </div>
+        <button class="text-xs text-gray-400 ml-1">Sign out</button>
+      </div>
     </div>
-    <div class="go">Go get 'em. 🚀</div>
+  </div>
+</header>
+
+<main class="max-w-7xl mx-auto px-6 py-8 space-y-6">
+
+  <!-- Hero -->
+  <div class="bg-brand rounded-2xl px-8 py-7 flex items-start justify-between gap-6">
+    <div class="flex-1 min-w-0">
+      <h1 class="text-2xl font-bold text-brand-ink">Good morning, Mark.</h1>
+      <p class="text-sm text-brand-ink/85 mt-2 max-w-3xl leading-relaxed">
+        Your weekly update ran Wed 6:00 AM — 12 new transactions, 15 new permits, 4 new builders added. 3 hot leads need your attention today — Evergreen Homes pulled another permit, Northline Builders is ready for a term sheet, and Rainshadow Custom Co is 2 days overdue on outreach.
+      </p>
+    </div>
+    <div class="text-3xl font-extrabold text-brand-ink/95 tracking-tight whitespace-nowrap pt-1">
+      Go get &rsquo;em.
+    </div>
   </div>
 
-  <!-- KPI ROW -->
-  <div class="kpis">
-    <div class="kpi hot"><div class="label">Hot Leads</div><div class="val">3</div><div class="delta up">↑ 1 from last week</div></div>
-    <div class="kpi"><div class="label">Active Pipeline</div><div class="val">47</div><div class="delta">builders in stages &gt; New</div></div>
-    <div class="kpi warn"><div class="label">Overdue Actions</div><div class="val">2</div><div class="delta down">2 follow-ups past due</div></div>
-    <div class="kpi"><div class="label">Response Rate (30d)</div><div class="val">34%</div><div class="delta up">↑ 6pts vs prior 30d</div></div>
+  <!-- KPI row -->
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+    <div class="rounded-xl border border-gray-200 bg-white p-5">
+      <div class="text-[11px] font-semibold uppercase tracking-widest text-gray-400 mb-1">Hot Leads</div>
+      <div class="text-3xl font-bold text-gray-900">3</div>
+      <div class="text-xs mt-1 font-medium text-emerald-600">&uarr; +1 from last week</div>
+    </div>
+    <div class="rounded-xl border border-gray-200 bg-white p-5">
+      <div class="text-[11px] font-semibold uppercase tracking-widest text-gray-400 mb-1">Active Pipeline</div>
+      <div class="text-3xl font-bold text-gray-900">47</div>
+      <div class="text-xs mt-1 font-medium text-emerald-600">&uarr; +5 from last week</div>
+    </div>
+    <div class="rounded-xl border border-red-200 bg-red-50 p-5">
+      <div class="text-[11px] font-semibold uppercase tracking-widest text-gray-400 mb-1">Overdue Actions</div>
+      <div class="text-3xl font-bold text-red-700">2</div>
+      <div class="text-xs mt-1 font-medium text-gray-500">2 follow-ups past due</div>
+    </div>
+    <div class="rounded-xl border border-gray-200 bg-white p-5">
+      <div class="text-[11px] font-semibold uppercase tracking-widest text-gray-400 mb-1">Response Rate</div>
+      <div class="text-3xl font-bold text-gray-900">34%</div>
+      <div class="text-xs mt-1 font-medium text-emerald-600">&uarr; +6 pts from last week</div>
+    </div>
   </div>
 
-  <div class="main">
+  <!-- Two-column -->
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
-    <!-- LEFT: PRIORITY LIST -->
-    <div class="card">
-      <h2>Top priority today <a class="link" href="./transactions.html">See all transactions →</a></h2>
-      <div class="prio">
+    <!-- Top Priority panel -->
+    <div class="lg:col-span-2 bg-white border border-gray-200 rounded-xl overflow-hidden">
+      <div class="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
+        <h2 class="text-sm font-semibold text-gray-900">Top priority today</h2>
+        <a href="./transactions.html" class="text-xs text-brand-dark hover:underline">See all transactions &rarr;</a>
+      </div>
+      <div class="divide-y divide-gray-50">
 
-        <a href="./builder-card.html" class="prio-row hot">
-          <div class="prio-rank">1</div>
-          <div class="prio-main">
-            <div class="name">Evergreen Homes LLC · score 87 🔥</div>
-            <div class="sub"><span class="kind permit">PERMIT</span>New permit issued Apr 18 ($872K, Bothell) · meeting already scheduled Fri 10 AM</div>
+        <!-- Lead 1 -->
+        <div class="flex items-start gap-4 px-5 py-4">
+          <div class="w-6 h-6 rounded-full bg-gray-50 flex items-center justify-center text-xs font-medium text-gray-500 shrink-0 mt-1">1</div>
+          <div class="shrink-0 mt-0.5">
+            <svg viewBox="0 0 36 36" class="w-9 h-9">
+              <circle cx="18" cy="18" r="15" fill="none" class="ring-bg" stroke-width="3" />
+              <circle cx="18" cy="18" r="15" fill="none" stroke="#dc2626" stroke-width="3" stroke-dasharray="94.25" stroke-dashoffset="12.25" transform="rotate(-90 18 18)" class="ring-fg" />
+              <text x="18" y="22" text-anchor="middle" font-size="11" font-weight="700" fill="#dc2626">87</text>
+            </svg>
           </div>
-          <button class="prio-cta">Call Sarah</button>
-        </a>
-
-        <a href="./builder-card.html" class="prio-row">
-          <div class="prio-rank">2</div>
-          <div class="prio-main">
-            <div class="name">Northline Builders · score 74</div>
-            <div class="sub"><span class="kind lot">LOT</span>Engaged — send term sheet by Apr 26 ($215K lot, Puyallup)</div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-2 flex-wrap">
+              <a href="./builder-card.html" class="text-sm font-semibold text-gray-900">Evergreen Homes LLC</a>
+              <span class="text-base">&#x1F525;</span>
+            </div>
+            <div class="flex items-start gap-2 mt-1.5">
+              <span class="text-[10px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider whitespace-nowrap bg-brand-soft text-brand-dark">PERMIT</span>
+              <span class="text-xs text-gray-600 leading-snug">New permit issued Apr 18 ($872K, Bothell) &middot; meeting already scheduled Fri 10 AM</span>
+            </div>
           </div>
-          <button class="prio-cta">Draft term sheet</button>
-        </a>
+          <a href="./builder-card.html" class="text-xs font-semibold text-brand-ink bg-brand hover:bg-brand-dark hover:text-white border border-brand-dark/30 rounded-full px-3.5 py-1.5 whitespace-nowrap shrink-0 mt-0.5">Call Sarah</a>
+        </div>
 
-        <a href="./builder-card.html" class="prio-row">
-          <div class="prio-rank">3</div>
-          <div class="prio-main">
-            <div class="name">Rainshadow Custom Co · score 63</div>
-            <div class="sub"><span class="kind overdue">OVERDUE 2d</span>First outreach never sent · $425K lot + 2 new permits this week</div>
+        <!-- Lead 2 -->
+        <div class="flex items-start gap-4 px-5 py-4">
+          <div class="w-6 h-6 rounded-full bg-gray-50 flex items-center justify-center text-xs font-medium text-gray-500 shrink-0 mt-1">2</div>
+          <div class="shrink-0 mt-0.5">
+            <svg viewBox="0 0 36 36" class="w-9 h-9">
+              <circle cx="18" cy="18" r="15" fill="none" class="ring-bg" stroke-width="3" />
+              <circle cx="18" cy="18" r="15" fill="none" stroke="#f59e0b" stroke-width="3" stroke-dasharray="94.25" stroke-dashoffset="24.5" transform="rotate(-90 18 18)" class="ring-fg" />
+              <text x="18" y="22" text-anchor="middle" font-size="11" font-weight="700" fill="#b45309">74</text>
+            </svg>
           </div>
-          <button class="prio-cta">Start drip</button>
-        </a>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-2 flex-wrap">
+              <a href="./builder-card.html" class="text-sm font-semibold text-gray-900">Northline Builders</a>
+            </div>
+            <div class="flex items-start gap-2 mt-1.5">
+              <span class="text-[10px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider whitespace-nowrap bg-amber-100 text-amber-800">LOT</span>
+              <span class="text-xs text-gray-600 leading-snug">Engaged &mdash; send term sheet by Apr 26 ($215K lot, Puyallup)</span>
+            </div>
+          </div>
+          <a href="./builder-card.html" class="text-xs font-semibold text-brand-ink bg-brand hover:bg-brand-dark hover:text-white border border-brand-dark/30 rounded-full px-3.5 py-1.5 whitespace-nowrap shrink-0 mt-0.5">Draft term sheet</a>
+        </div>
 
-        <a href="./builder-card.html" class="prio-row">
-          <div class="prio-rank">4</div>
-          <div class="prio-main">
-            <div class="name">Cedar Grove Homes · score 68</div>
-            <div class="sub"><span class="kind lot">LOT</span>Awaiting email reply (expected Apr 24) — watch inbox</div>
+        <!-- Lead 3 -->
+        <div class="flex items-start gap-4 px-5 py-4">
+          <div class="w-6 h-6 rounded-full bg-gray-50 flex items-center justify-center text-xs font-medium text-gray-500 shrink-0 mt-1">3</div>
+          <div class="shrink-0 mt-0.5">
+            <svg viewBox="0 0 36 36" class="w-9 h-9">
+              <circle cx="18" cy="18" r="15" fill="none" class="ring-bg" stroke-width="3" />
+              <circle cx="18" cy="18" r="15" fill="none" stroke="#f59e0b" stroke-width="3" stroke-dasharray="94.25" stroke-dashoffset="35" transform="rotate(-90 18 18)" class="ring-fg" />
+              <text x="18" y="22" text-anchor="middle" font-size="11" font-weight="700" fill="#b45309">63</text>
+            </svg>
           </div>
-          <button class="prio-cta sec">View thread</button>
-        </a>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-2 flex-wrap">
+              <a href="./builder-card.html" class="text-sm font-semibold text-gray-900">Rainshadow Custom Co</a>
+            </div>
+            <div class="flex items-start gap-2 mt-1.5">
+              <span class="text-[10px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider whitespace-nowrap bg-red-100 text-red-700">OVERDUE 2d</span>
+              <span class="text-xs text-gray-600 leading-snug">First outreach never sent &middot; $425K lot + 2 new permits this week</span>
+            </div>
+          </div>
+          <a href="./builder-card.html" class="text-xs font-semibold text-brand-ink bg-brand hover:bg-brand-dark hover:text-white border border-brand-dark/30 rounded-full px-3.5 py-1.5 whitespace-nowrap shrink-0 mt-0.5">Start drip</a>
+        </div>
 
-        <a href="./builder-card.html" class="prio-row">
-          <div class="prio-rank">5</div>
-          <div class="prio-main">
-            <div class="name">Madrona Street Builders · score 54</div>
-            <div class="sub"><span class="kind overdue">OVERDUE 5d</span>Follow-up past due · no response to prior email</div>
+        <!-- Lead 4 -->
+        <div class="flex items-start gap-4 px-5 py-4">
+          <div class="w-6 h-6 rounded-full bg-gray-50 flex items-center justify-center text-xs font-medium text-gray-500 shrink-0 mt-1">4</div>
+          <div class="shrink-0 mt-0.5">
+            <svg viewBox="0 0 36 36" class="w-9 h-9">
+              <circle cx="18" cy="18" r="15" fill="none" class="ring-bg" stroke-width="3" />
+              <circle cx="18" cy="18" r="15" fill="none" stroke="#f59e0b" stroke-width="3" stroke-dasharray="94.25" stroke-dashoffset="30.2" transform="rotate(-90 18 18)" class="ring-fg" />
+              <text x="18" y="22" text-anchor="middle" font-size="11" font-weight="700" fill="#b45309">68</text>
+            </svg>
           </div>
-          <button class="prio-cta">Call now</button>
-        </a>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-2 flex-wrap">
+              <a href="./builder-card.html" class="text-sm font-semibold text-gray-900">Cedar Grove Homes</a>
+            </div>
+            <div class="flex items-start gap-2 mt-1.5">
+              <span class="text-[10px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider whitespace-nowrap bg-amber-100 text-amber-800">LOT</span>
+              <span class="text-xs text-gray-600 leading-snug">Awaiting email reply (expected Apr 24) &mdash; watch inbox</span>
+            </div>
+          </div>
+          <a href="./builder-card.html" class="text-xs font-semibold text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 rounded-full px-3.5 py-1.5 whitespace-nowrap shrink-0 mt-0.5">View thread</a>
+        </div>
 
-        <a href="./builder-card.html" class="prio-row">
-          <div class="prio-rank">6</div>
-          <div class="prio-main">
-            <div class="name">Sound Ridge Dev LLC</div>
-            <div class="sub"><span class="kind new">NEW FROM PERMIT</span>Enrichment complete — qualify &amp; assign by Apr 26</div>
+        <!-- Lead 5 -->
+        <div class="flex items-start gap-4 px-5 py-4">
+          <div class="w-6 h-6 rounded-full bg-gray-50 flex items-center justify-center text-xs font-medium text-gray-500 shrink-0 mt-1">5</div>
+          <div class="shrink-0 mt-0.5">
+            <svg viewBox="0 0 36 36" class="w-9 h-9">
+              <circle cx="18" cy="18" r="15" fill="none" class="ring-bg" stroke-width="3" />
+              <circle cx="18" cy="18" r="15" fill="none" stroke="#9ca3af" stroke-width="3" stroke-dasharray="94.25" stroke-dashoffset="43.4" transform="rotate(-90 18 18)" class="ring-fg" />
+              <text x="18" y="22" text-anchor="middle" font-size="11" font-weight="700" fill="#374151">54</text>
+            </svg>
           </div>
-          <button class="prio-cta sec">Qualify</button>
-        </a>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-2 flex-wrap">
+              <a href="./builder-card.html" class="text-sm font-semibold text-gray-900">Madrona Street Builders</a>
+            </div>
+            <div class="flex items-start gap-2 mt-1.5">
+              <span class="text-[10px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider whitespace-nowrap bg-red-100 text-red-700">OVERDUE 5d</span>
+              <span class="text-xs text-gray-600 leading-snug">Follow-up past due &middot; no response to prior email</span>
+            </div>
+          </div>
+          <a href="./builder-card.html" class="text-xs font-semibold text-brand-ink bg-brand hover:bg-brand-dark hover:text-white border border-brand-dark/30 rounded-full px-3.5 py-1.5 whitespace-nowrap shrink-0 mt-0.5">Call now</a>
+        </div>
+
+        <!-- Lead 6 -->
+        <div class="flex items-start gap-4 px-5 py-4">
+          <div class="w-6 h-6 rounded-full bg-gray-50 flex items-center justify-center text-xs font-medium text-gray-500 shrink-0 mt-1">6</div>
+          <div class="shrink-0 mt-0.5">
+            <svg viewBox="0 0 36 36" class="w-9 h-9">
+              <circle cx="18" cy="18" r="15" fill="none" class="ring-bg" stroke-width="3" />
+              <circle cx="18" cy="18" r="15" fill="none" stroke="#9ca3af" stroke-width="3" stroke-dasharray="94.25" stroke-dashoffset="50" transform="rotate(-90 18 18)" class="ring-fg" />
+              <text x="18" y="22" text-anchor="middle" font-size="11" font-weight="700" fill="#6b7280">&mdash;</text>
+            </svg>
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-2 flex-wrap">
+              <a href="./builder-card.html" class="text-sm font-semibold text-gray-900">Sound Ridge Dev LLC</a>
+            </div>
+            <div class="flex items-start gap-2 mt-1.5">
+              <span class="text-[10px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider whitespace-nowrap bg-amber-100 text-amber-700">NEW FROM PERMIT</span>
+              <span class="text-xs text-gray-600 leading-snug">Enrichment complete &mdash; qualify &amp; assign by Apr 26</span>
+            </div>
+          </div>
+          <a href="./builder-card.html" class="text-xs font-semibold text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 rounded-full px-3.5 py-1.5 whitespace-nowrap shrink-0 mt-0.5">Qualify</a>
+        </div>
 
       </div>
     </div>
 
-    <!-- RIGHT COLUMN -->
-    <div class="right-col">
+    <!-- Right rail -->
+    <div class="space-y-6">
 
-      <!-- PIPELINE HEALTH -->
-      <div class="card">
-        <h2>Pipeline by stage <a class="link" href="./builders.html">Builders list →</a></h2>
-        <div class="bar">
-          <div class="bar-row"><span class="lbl">New</span><div class="track"><div class="fill info" style="width:82%"></div></div><span class="val">18</span></div>
-          <div class="bar-row"><span class="lbl">Contacted</span><div class="track"><div class="fill warn" style="width:54%"></div></div><span class="val">12</span></div>
-          <div class="bar-row"><span class="lbl">Engaged</span><div class="track"><div class="fill" style="width:36%"></div></div><span class="val">8</span></div>
-          <div class="bar-row"><span class="lbl">Meeting Sched</span><div class="track"><div class="fill" style="width:18%"></div></div><span class="val">4</span></div>
-          <div class="bar-row"><span class="lbl">Proposal</span><div class="track"><div class="fill" style="width:14%"></div></div><span class="val">3</span></div>
-          <div class="bar-row"><span class="lbl">Dormant</span><div class="track"><div class="fill" style="width:8%;background:var(--ink-4)"></div></div><span class="val">2</span></div>
+      <!-- Pipeline by stage -->
+      <div class="bg-white border border-gray-200 rounded-xl overflow-hidden">
+        <div class="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
+          <h2 class="text-sm font-semibold text-gray-900">Pipeline by stage</h2>
+          <a href="./builders.html" class="text-xs text-brand-dark hover:underline">Builders list &rarr;</a>
+        </div>
+        <div class="px-5 py-4 space-y-3">
+          <div>
+            <div class="flex items-center justify-between mb-1">
+              <span class="text-xs text-gray-600">New</span>
+              <span class="text-xs font-semibold text-gray-800">18</span>
+            </div>
+            <div class="h-2 bg-gray-100 rounded-full overflow-hidden"><div class="h-full rounded-full bg-blue-500" style="width: 100%"></div></div>
+          </div>
+          <div>
+            <div class="flex items-center justify-between mb-1">
+              <span class="text-xs text-gray-600">Contacted</span>
+              <span class="text-xs font-semibold text-gray-800">12</span>
+            </div>
+            <div class="h-2 bg-gray-100 rounded-full overflow-hidden"><div class="h-full rounded-full bg-amber-500" style="width: 67%"></div></div>
+          </div>
+          <div>
+            <div class="flex items-center justify-between mb-1">
+              <span class="text-xs text-gray-600">Engaged</span>
+              <span class="text-xs font-semibold text-gray-800">8</span>
+            </div>
+            <div class="h-2 bg-gray-100 rounded-full overflow-hidden"><div class="h-full rounded-full bg-brand" style="width: 44%"></div></div>
+          </div>
+          <div>
+            <div class="flex items-center justify-between mb-1">
+              <span class="text-xs text-gray-600">Meeting Scheduled</span>
+              <span class="text-xs font-semibold text-gray-800">4</span>
+            </div>
+            <div class="h-2 bg-gray-100 rounded-full overflow-hidden"><div class="h-full rounded-full bg-amber-400" style="width: 22%"></div></div>
+          </div>
+          <div>
+            <div class="flex items-center justify-between mb-1">
+              <span class="text-xs text-gray-600">Proposal</span>
+              <span class="text-xs font-semibold text-gray-800">3</span>
+            </div>
+            <div class="h-2 bg-gray-100 rounded-full overflow-hidden"><div class="h-full rounded-full bg-purple-400" style="width: 17%"></div></div>
+          </div>
+          <div>
+            <div class="flex items-center justify-between mb-1">
+              <span class="text-xs text-gray-600">Dormant</span>
+              <span class="text-xs font-semibold text-gray-800">2</span>
+            </div>
+            <div class="h-2 bg-gray-100 rounded-full overflow-hidden"><div class="h-full rounded-full bg-gray-400" style="width: 11%"></div></div>
+          </div>
         </div>
       </div>
 
-      <!-- RECENT WINS -->
-      <div class="card wins">
-        <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-3);font-weight:600;margin-bottom:6px">Last 30 days</div>
-        <div class="big">2 <span class="unit">loans closed</span></div>
-        <div class="caption">$1.14M total volume · Stoneleaf Construction (Mill Creek) and Copperbeam Homes LLC (Kirkland) both sourced through BuilderPath outreach. 🎉</div>
-        <div class="splits">
-          <div class="split"><div class="lbl">Outreach sent</div><div class="v">74</div></div>
-          <div class="split"><div class="lbl">Reply rate</div><div class="v">34%</div></div>
-          <div class="split"><div class="lbl">Meetings set</div><div class="v">11</div></div>
-          <div class="split"><div class="lbl">Cost / loan</div><div class="v">$63</div></div>
+      <!-- Last 30 Days -->
+      <div class="bg-white border border-gray-200 rounded-xl overflow-hidden">
+        <div class="px-5 py-4 border-b border-gray-100">
+          <h2 class="text-sm font-semibold text-gray-900">Last 30 Days</h2>
+          <div class="flex items-baseline gap-2 mt-1">
+            <span class="text-3xl font-bold text-gray-900">2</span>
+            <span class="text-sm text-gray-500">loans closed</span>
+          </div>
+          <p class="text-xs text-gray-500 mt-1.5">$1.14M total volume &middot; Stoneleaf Construction and Copperbeam Homes LLC both sourced through BuilderPath outreach</p>
+        </div>
+        <div class="grid grid-cols-2 gap-px bg-gray-100">
+          <div class="bg-white border border-gray-200 rounded-xl p-4">
+            <div class="text-[10px] font-semibold uppercase tracking-widest text-gray-400 mb-1">Outreach Sent</div>
+            <div class="text-2xl font-bold text-gray-900 leading-none">74</div>
+          </div>
+          <div class="bg-white border border-gray-200 rounded-xl p-4">
+            <div class="text-[10px] font-semibold uppercase tracking-widest text-gray-400 mb-1">Reply Rate</div>
+            <div class="text-2xl font-bold text-gray-900 leading-none">34%</div>
+          </div>
+          <div class="bg-white border border-gray-200 rounded-xl p-4">
+            <div class="text-[10px] font-semibold uppercase tracking-widest text-gray-400 mb-1">Meetings Set</div>
+            <div class="text-2xl font-bold text-gray-900 leading-none">11</div>
+          </div>
+          <div class="bg-white border border-gray-200 rounded-xl p-4">
+            <div class="text-[10px] font-semibold uppercase tracking-widest text-gray-400 mb-1">Cost / Loan</div>
+            <div class="text-2xl font-bold text-gray-900 leading-none">$63</div>
+          </div>
         </div>
       </div>
 
-      <!-- ACTIVITY STREAM -->
-      <div class="card">
-        <h2>Recent activity</h2>
-        <div class="stream">
-          <div class="stream-row"><span class="when">6:02 AM</span><span class="what"><span class="kind start">CRON</span>Weekly ingest complete — 12 transactions, 15 permits, 4 new builders</span></div>
-          <div class="stream-row"><span class="when">Yesterday</span><span class="what"><span class="kind reply">REPLY</span><span class="actor">Sarah Chen</span> replied to your outreach: "Let's connect next week"</span></div>
-          <div class="stream-row"><span class="when">Apr 20</span><span class="what"><span class="kind win">WIN</span>Stoneleaf Construction loan closed · $486K</span></div>
-          <div class="stream-row"><span class="when">Apr 19</span><span class="what"><span class="kind start">DRIP</span>Drip campaign started for Northline Builders (5 emails)</span></div>
-          <div class="stream-row"><span class="when">Apr 18</span><span class="what"><span class="kind win">WIN</span>Copperbeam Homes LLC loan closed · $654K</span></div>
+      <!-- Recent Activity -->
+      <div class="bg-white border border-gray-200 rounded-xl overflow-hidden">
+        <div class="px-5 py-4 border-b border-gray-100">
+          <h2 class="text-sm font-semibold text-gray-900 mb-3">Recent activity</h2>
+          <div class="flex gap-1 flex-wrap">
+            <button class="px-2.5 py-1 text-[11px] font-medium rounded-full bg-gray-900 text-white border border-gray-900">All</button>
+            <button class="px-2.5 py-1 text-[11px] font-medium rounded-full bg-white text-gray-500 border border-gray-200">Updates</button>
+            <button class="px-2.5 py-1 text-[11px] font-medium rounded-full bg-white text-gray-500 border border-gray-200">Drips</button>
+            <button class="px-2.5 py-1 text-[11px] font-medium rounded-full bg-white text-gray-500 border border-gray-200">Replies</button>
+            <button class="px-2.5 py-1 text-[11px] font-medium rounded-full bg-white text-gray-500 border border-gray-200">Stage</button>
+          </div>
+        </div>
+        <div class="divide-y divide-gray-50">
+          <div class="px-4 py-2.5 flex items-start gap-2.5">
+            <span class="text-[11px] text-gray-400 tabular-nums w-12 flex-shrink-0 pt-0.5">6:02 AM</span>
+            <span class="text-[10px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider flex-shrink-0 mt-0.5 bg-brand-soft text-brand-dark">UPDATE</span>
+            <span class="text-xs text-gray-700 leading-snug min-w-0">Weekly update complete &mdash; 12 transactions, 15 permits, 4 new builders</span>
+          </div>
+          <div class="px-4 py-2.5 flex items-start gap-2.5">
+            <span class="text-[11px] text-gray-400 tabular-nums w-12 flex-shrink-0 pt-0.5">Yesterday</span>
+            <span class="text-[10px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider flex-shrink-0 mt-0.5 bg-amber-100 text-amber-800">REPLY</span>
+            <span class="text-xs text-gray-700 leading-snug min-w-0"><a href="./builder-card.html" class="font-medium hover:text-brand-dark hover:underline">Sarah Chen</a> <span class="text-gray-600">replied to your outreach: &quot;Let&rsquo;s connect next week&quot;</span></span>
+          </div>
+          <div class="px-4 py-2.5 flex items-start gap-2.5">
+            <span class="text-[11px] text-gray-400 tabular-nums w-12 flex-shrink-0 pt-0.5">Apr 20</span>
+            <span class="text-[10px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider flex-shrink-0 mt-0.5 bg-emerald-100 text-emerald-700">WIN</span>
+            <span class="text-xs text-gray-700 leading-snug min-w-0"><a href="./builder-card.html" class="font-medium hover:text-brand-dark hover:underline">Stoneleaf Construction</a> <span class="text-gray-600">loan closed &middot; $486K</span></span>
+          </div>
+          <div class="px-4 py-2.5 flex items-start gap-2.5">
+            <span class="text-[11px] text-gray-400 tabular-nums w-12 flex-shrink-0 pt-0.5">Apr 19</span>
+            <span class="text-[10px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider flex-shrink-0 mt-0.5 bg-blue-100 text-blue-700">DRIP</span>
+            <span class="text-xs text-gray-700 leading-snug min-w-0"><a href="./builder-card.html" class="font-medium hover:text-brand-dark hover:underline">Northline Builders</a> <span class="text-gray-600">drip campaign started (5 emails)</span></span>
+          </div>
+          <div class="px-4 py-2.5 flex items-start gap-2.5">
+            <span class="text-[11px] text-gray-400 tabular-nums w-12 flex-shrink-0 pt-0.5">Apr 18</span>
+            <span class="text-[10px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider flex-shrink-0 mt-0.5 bg-emerald-100 text-emerald-700">WIN</span>
+            <span class="text-xs text-gray-700 leading-snug min-w-0"><a href="./builder-card.html" class="font-medium hover:text-brand-dark hover:underline">Copperbeam Homes LLC</a> <span class="text-gray-600">loan closed &middot; $654K</span></span>
+          </div>
         </div>
       </div>
-
-    </div>
-
-  </div>
-
-</div>
-
-<div class="overlay" id="fb" onclick="this.classList.remove('open')">
-  <div class="modal" onclick="event.stopPropagation()">
-    <h3>Send feedback</h3>
-    <p>Your message is delivered to the BuilderPath admin team's Feedback inbox in the Admin Dashboard.</p>
-    <textarea placeholder="What's working, what's not, what you need."></textarea>
-    <div class="modal-actions">
-      <button class="btn" onclick="document.getElementById('fb').classList.remove('open')">Cancel</button>
-      <button class="btn primary">Send</button>
     </div>
   </div>
-</div>
+
+</main>
 
 </body>
 </html>
